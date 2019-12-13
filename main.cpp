@@ -32,6 +32,12 @@ private:
     float gravityAmount;
 };
 
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
+
 int main() {
     World *world = World::createWorld();
     world->registerSystem(new GravitySystem(-9.8f));
@@ -60,6 +66,8 @@ int main() {
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+
+    glfwSetKeyCallback(window, key_callback);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
