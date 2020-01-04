@@ -5,128 +5,15 @@
 
 #include "Rendering/Shader.h"
 #include "ECS/ECS.h"
+#include "ECS/Events/InputEvent.h"
+#include "ECS/Systems/GravitySystem.h"
+#include "ECS/Systems/PositionDebugSystem.h"
+#include "ECS/Systems/KeyboardMovementSystem.h"
 
 using namespace ECS;
 
 
 World *world = World::createWorld();
-
-
-struct Position {
-    Position(float x, float y, float z) : x(x), y(y), z(z) {}
-
-    Position() : x(0.f), y(0.f), z(0.f) {}
-
-    float x;
-    float y;
-    float z;
-};
-
-struct Movement {
-    Movement(float speedX, float speedY, float speedZ) : speedX(speedX), speedY(speedY), speedZ(speedZ) {}
-
-    float speedX;
-    float speedY;
-    float speedZ;
-
-    int movingX = 0;
-    int movingY = 0;
-    int movingZ = 0;
-
-    float velocityX = 0.0f;
-    float velocityY = 0.0f;
-    float velocityZ = 0.0f;
-};
-
-struct InputEvent {
-    int key;
-    int action;
-};
-
-class GravitySystem : public EntitySystem {
-public:
-    explicit GravitySystem(float amount) {
-        gravityAmount = amount;
-    }
-
-    void tick(World *pWorld, float deltaTime) override {
-        pWorld->each<Position>([&](Entity *ent, ComponentHandle<Position> position) {
-            position->y += gravityAmount * deltaTime;
-        });
-    }
-
-private:
-    float gravityAmount;
-};
-
-class PositionDebugOutputSystem : public EntitySystem {
-public:
-    void tick(World *pWorld, float deltaTime) override {
-        pWorld->each<Position>([&](Entity *ent, ComponentHandle<Position> position) {
-            std::cout << ent->getEntityId() << ": "
-                      << position->x << ", "
-                      << position->y << ", "
-                      << position->z
-                      << std::endl;
-        });
-    }
-};
-
-class KeyboardMovementSystem : public EntitySystem, public EventSubscriber<InputEvent> {
-    void configure(World *pWorld) override {
-        pWorld->subscribe<InputEvent>(this);
-    }
-
-    void receive(World *pWorld, const InputEvent &event) override {
-        if (event.key == GLFW_KEY_W) {
-            world->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
-                if (event.action == GLFW_PRESS) {
-                    movement->movingZ = -1;
-                } else if (event.action == GLFW_RELEASE) {
-                    movement->movingZ = 0;
-                }
-            });
-        } else if (event.key == GLFW_KEY_S) {
-            world->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
-                if (event.action == GLFW_PRESS) {
-                    movement->movingZ = 1;
-                } else if (event.action == GLFW_RELEASE) {
-                    movement->movingZ = 0;
-                }
-            });
-        } else if (event.key == GLFW_KEY_A) {
-            world->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
-                if (event.action == GLFW_PRESS) {
-                    movement->movingX = 1;
-                } else if (event.action == GLFW_RELEASE) {
-                    movement->movingX = 0;
-                }
-            });
-        } else if (event.key == GLFW_KEY_D) {
-            world->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
-                if (event.action == GLFW_PRESS) {
-                    movement->movingX = -1;
-                } else if (event.action == GLFW_RELEASE) {
-                    movement->movingX = 0;
-                }
-            });
-        }
-        std::cout << "MyEvent was emitted!" << std::endl;
-    }
-
-    void tick(World *pWorld, float deltaTime) override {
-        pWorld->each<Position, Movement>(
-                [&](Entity *ent, ComponentHandle<Position> position, ComponentHandle<Movement> movement) {
-                    position->x += movement->movingX * movement->speedX * deltaTime;
-                    position->y += movement->movingY * movement->speedY * deltaTime;
-                    position->z += movement->movingZ * movement->speedZ * deltaTime;
-                });
-    }
-
-    void unconfigure(World *pWorld) override {
-        pWorld->unsubscribeAll(this);
-    }
-};
 
 
 static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
