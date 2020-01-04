@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-#include "Shader.h"
-#include "ECS.h"
+#include "Rendering/Shader.h"
+#include "ECS/ECS.h"
 
 using namespace ECS;
 
