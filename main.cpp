@@ -6,10 +6,12 @@
 #include "Rendering/Shader.h"
 #include "ECS/ECS.h"
 #include "ECS/Events/InputEvent.h"
+#include "ECS/Events/MouseMoveEvent.h"
 #include "ECS/Systems/GravitySystem.h"
 #include "ECS/Systems/PositionDebugSystem.h"
 #include "ECS/Systems/KeyboardMovementSystem.h"
 #include "ECS/Systems/RenderSystem.h"
+#include "ECS/Systems/MouseLookSystem.h"
 
 using namespace ECS;
 
@@ -22,6 +24,10 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 
     world->emit<InputEvent>({key, action});
+}
+
+static void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    world->emit<MouseMoveEvent>({xpos, ypos});
 }
 
 int main() {
@@ -41,6 +47,10 @@ int main() {
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    glfwSetCursorPosCallback(window, mouse_callback);
+
     glfwSetKeyCallback(window, key_callback);
 
     // glad: load all OpenGL function pointers
@@ -55,8 +65,9 @@ int main() {
 
     // TODO: Could be automated by getting all classes within 'ECS/Systems'
     // world->registerSystem(new GravitySystem(-9.8f));
-    world->registerSystem(new PositionDebugOutputSystem());
+    // world->registerSystem(new PositionDebugOutputSystem());
     world->registerSystem(new KeyboardMovementSystem());
+    world->registerSystem(new MouseLookSystem(640, 480));
 
     RenderSystem* renderSystem = new RenderSystem();
     world->registerSystem(renderSystem);
@@ -65,6 +76,7 @@ int main() {
     player->assign<Transform>();
     player->assign<Movement>(glm::vec3(1.f, 1.f, 1.f));
     player->assign<Camera>(70.0f, 640, 480, 0.1f, 100.0f);
+    player->assign<MouseLook>(0.1);
 
     Entity *box = world->create();
     box->assign<Transform>();
@@ -111,7 +123,7 @@ int main() {
             -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
             -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     });
-    box->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -10.0f));
+    box->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -5.0f));
 
     Shader defaultShader("Shaders/default-vertex.vs", "Shaders/default-fragment.fs");
 
@@ -124,8 +136,6 @@ int main() {
         double delta = glfwGetTime() - timeInLastFrame;
         timeInLastFrame = glfwGetTime();
         elapsed_time += delta;
-
-        std::cout << "Elapsed time: " << elapsed_time << std::endl;
 
         world->tick(delta);
         renderSystem->render(world, defaultShader);

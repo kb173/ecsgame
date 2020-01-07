@@ -33,6 +33,18 @@ struct Transform {
     glm::vec3 getPosition() {
         return matrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     }
+
+    glm::vec3 forward() {
+        return matrix * glm::vec4(0.0, 0.0, -1.0, 1.0);
+    }
+
+    glm::vec3 up() {
+        return  matrix * glm::vec4(0.0, 1.0, 0.0, 1.0);
+    }
+
+    glm::vec3 right() {
+        return matrix * glm::vec4(1.0, 0.0, 0.0, 1.0);
+    }
 };
 
 #endif //ECSGAME_TRANSFORM_H

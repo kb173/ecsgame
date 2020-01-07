@@ -14,6 +14,8 @@ struct Camera {
             glm::perspective(glm::radians(fov), width / height, near, far)) {}
 
     glm::mat4 projection;
+
+    glm::mat4 view;
 };
 
 #endif //ECSGAME_CAMERA_H

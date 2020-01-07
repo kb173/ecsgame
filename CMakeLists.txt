@@ -7,7 +7,7 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 
-add_executable(ecsgame Util/glad.c Util/OBJ_Loader.h Rendering/Shader.cpp Rendering/Shader.h main.cpp ECS/Components/Transform.h ECS/Components/Movement.h ECS/Events/InputEvent.h ECS/Systems/GravitySystem.h ECS/Systems/PositionDebugSystem.h ECS/Systems/KeyboardMovementSystem.h ECS/Components/Camera.h ECS/Systems/RenderSystem.h ECS/Components/Mesh.h)
+add_executable(ecsgame Util/glad.c Util/OBJ_Loader.h Rendering/Shader.cpp Rendering/Shader.h main.cpp ECS/Components/Transform.h ECS/Components/Movement.h ECS/Events/InputEvent.h ECS/Events/MouseMoveEvent.h ECS/Systems/GravitySystem.h ECS/Systems/PositionDebugSystem.h ECS/Systems/KeyboardMovementSystem.h ECS/Components/Camera.h ECS/Systems/RenderSystem.h ECS/Components/Mesh.h ECS/Systems/MouseLookSystem.h ECS/Components/MouseLook.h)
 
 include_directories(${OPENGL_INCLUDE_DIRS})
 
