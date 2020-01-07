@@ -6,6 +6,7 @@
 #define ECSGAME_SHADER_H
 
 #include <string>
+#include <glm/glm.hpp>
 
 class Shader {
 public:
@@ -27,6 +28,9 @@ public:
 
     /// Set a uniform float in the shader
     void setFloat(const std::string &name, float value) const;
+
+    /// Set a uniform mat4 in the shader
+    void setMat4(const std::string &name, glm::mat4 mat) const;
 
 private:
     static void checkCompileErrors(unsigned int shader, const std::string &type);

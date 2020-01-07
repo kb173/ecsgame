@@ -9,6 +9,7 @@
 #include "ECS/Systems/GravitySystem.h"
 #include "ECS/Systems/PositionDebugSystem.h"
 #include "ECS/Systems/KeyboardMovementSystem.h"
+#include "ECS/Systems/RenderSystem.h"
 
 using namespace ECS;
 
@@ -24,17 +25,6 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
 }
 
 int main() {
-    // TODO: Could be automated by getting all classes within 'ECS/Systems'
-    world->registerSystem(new GravitySystem(-9.8f));
-    world->registerSystem(new PositionDebugOutputSystem());
-    world->registerSystem(new KeyboardMovementSystem());
-
-    Entity *ent = world->create();
-    ent->assign<Transform>();
-    ent->assign<Movement>(glm::vec3(1.f, 1.f, 1.f));
-
-    ComponentHandle<Transform> pos = ent->get<Transform>();
-
     GLFWwindow *window;
 
     /* Initialize the library */
@@ -60,6 +50,21 @@ int main() {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    // TODO: Could be automated by getting all classes within 'ECS/Systems'
+    // world->registerSystem(new GravitySystem(-9.8f));
+    world->registerSystem(new PositionDebugOutputSystem());
+    world->registerSystem(new KeyboardMovementSystem());
+    world->registerSystem(new RenderSystem());
+
+    Entity *player = world->create();
+    player->assign<Transform>();
+    player->assign<Movement>(glm::vec3(1.f, 1.f, 1.f));
+    player->assign<Camera>(70.0f, 640, 480, 0.1f, 100.0f);
+
+    Entity *box = world->create();
+    box->assign<Transform>();
+    box->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -10.0f));
 
     Shader defaultShader("Shaders/default-vertex.vs", "Shaders/default-fragment.fs");
 

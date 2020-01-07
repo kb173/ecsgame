@@ -26,6 +26,10 @@ struct Transform {
         matrix = glm::scale(matrix, factors);
     }
 
+    void rotate(float degrees, glm::vec3 axis) {
+        matrix = glm::rotate(matrix, glm::radians(degrees), axis);
+    }
+
     glm::vec3 getPosition() {
         return matrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     }
