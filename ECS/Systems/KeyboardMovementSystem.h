@@ -28,33 +28,33 @@ class KeyboardMovementSystem : public EntitySystem, public EventSubscriber<Input
         if (event.key == GLFW_KEY_W) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->moving.z = -1;
+                    movement->moving.z -= 1;
                 } else if (event.action == GLFW_RELEASE) {
-                    movement->moving.z = 0;
+                    movement->moving.z += 1;
                 }
             });
         } else if (event.key == GLFW_KEY_S) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->moving.z = 1;
+                    movement->moving.z += 1;
                 } else if (event.action == GLFW_RELEASE) {
-                    movement->moving.z = 0;
+                    movement->moving.z -= 1;
                 }
             });
         } else if (event.key == GLFW_KEY_A) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->moving.x = -1;
+                    movement->moving.x -= 1;
                 } else if (event.action == GLFW_RELEASE) {
-                    movement->moving.x = 0;
+                    movement->moving.x += 1;
                 }
             });
         } else if (event.key == GLFW_KEY_D) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->moving.x = 1;
+                    movement->moving.x += 1;
                 } else if (event.action == GLFW_RELEASE) {
-                    movement->moving.x = 0;
+                    movement->moving.x -= 1;
                 }
             });
         }
