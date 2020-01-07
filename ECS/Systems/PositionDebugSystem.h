@@ -8,18 +8,18 @@
 #include <iostream>
 
 #include "../ECS.h"
-#include "../Components/Position.h"
+#include "../Components/Transform.h"
 
 using namespace ECS;
 
 class PositionDebugOutputSystem : public EntitySystem {
 public:
     void tick(World *pWorld, float deltaTime) override {
-        pWorld->each<Position>([&](Entity *ent, ComponentHandle<Position> position) {
+        pWorld->each<Transform>([&](Entity *ent, ComponentHandle<Transform> transform) {
             std::cout << ent->getEntityId() << ": "
-                      << position->x << ", "
-                      << position->y << ", "
-                      << position->z
+                      << transform->getPosition().x << ", "
+                      << transform->getPosition().y << ", "
+                      << transform->getPosition().z
                       << std::endl;
         });
     }

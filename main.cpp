@@ -24,15 +24,16 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
 }
 
 int main() {
+    // TODO: Could be automated by getting all classes within 'ECS/Systems'
     world->registerSystem(new GravitySystem(-9.8f));
     world->registerSystem(new PositionDebugOutputSystem());
     world->registerSystem(new KeyboardMovementSystem());
 
     Entity *ent = world->create();
-    ent->assign<Position>(0.f, 0.f, 0.f);
-    ent->assign<Movement>(1.f, 1.f, 1.f);
+    ent->assign<Transform>();
+    ent->assign<Movement>(glm::vec3(1.f, 1.f, 1.f));
 
-    ComponentHandle<Position> pos = ent->get<Position>();
+    ComponentHandle<Transform> pos = ent->get<Transform>();
 
     GLFWwindow *window;
 

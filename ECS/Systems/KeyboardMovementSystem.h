@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "../ECS.h"
-#include "../Components/Position.h"
+#include "../Components/Transform.h"
 #include "../Events/InputEvent.h"
 #include "../Components/Movement.h" 
 
@@ -28,33 +28,33 @@ class KeyboardMovementSystem : public EntitySystem, public EventSubscriber<Input
         if (event.key == GLFW_KEY_W) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->movingZ = -1;
+                    movement->moving.z = -1;
                 } else if (event.action == GLFW_RELEASE) {
-                    movement->movingZ = 0;
+                    movement->moving.z = 0;
                 }
             });
         } else if (event.key == GLFW_KEY_S) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->movingZ = 1;
+                    movement->moving.z = 1;
                 } else if (event.action == GLFW_RELEASE) {
-                    movement->movingZ = 0;
+                    movement->moving.z = 0;
                 }
             });
         } else if (event.key == GLFW_KEY_A) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->movingX = 1;
+                    movement->moving.x = 1;
                 } else if (event.action == GLFW_RELEASE) {
-                    movement->movingX = 0;
+                    movement->moving.x = 0;
                 }
             });
         } else if (event.key == GLFW_KEY_D) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->movingX = -1;
+                    movement->moving.x = -1;
                 } else if (event.action == GLFW_RELEASE) {
-                    movement->movingX = 0;
+                    movement->moving.x = 0;
                 }
             });
         }
@@ -62,11 +62,9 @@ class KeyboardMovementSystem : public EntitySystem, public EventSubscriber<Input
     }
 
     void tick(World *pWorld, float deltaTime) override {
-        pWorld->each<Position, Movement>(
-                [&](Entity *ent, ComponentHandle<Position> position, ComponentHandle<Movement> movement) {
-                    position->x += movement->movingX * movement->speedX * deltaTime;
-                    position->y += movement->movingY * movement->speedY * deltaTime;
-                    position->z += movement->movingZ * movement->speedZ * deltaTime;
+        pWorld->each<Transform, Movement>(
+                [&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<Movement> movement) {
+                    transform->translate(glm::vec3(movement->moving) * movement->speed * deltaTime);
                 });
     }
 

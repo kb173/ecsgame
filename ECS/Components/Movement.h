@@ -6,19 +6,13 @@
 #define ECSGAME_MOVEMENT_H
 
 struct Movement {
-    Movement(float speedX, float speedY, float speedZ) : speedX(speedX), speedY(speedY), speedZ(speedZ) {}
+    Movement(glm::vec3 speed) : speed(speed) {}
 
-    float speedX;
-    float speedY;
-    float speedZ;
+    glm::vec3 speed;
 
-    int movingX = 0;
-    int movingY = 0;
-    int movingZ = 0;
+    glm::ivec3 moving;
 
-    float velocityX = 0.0f;
-    float velocityY = 0.0f;
-    float velocityZ = 0.0f;
+    glm::vec3 velocity;
 };
 
 #endif //ECSGAME_MOVEMENT_H

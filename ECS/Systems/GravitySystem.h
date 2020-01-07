@@ -6,7 +6,7 @@
 #define ECSGAME_GRAVITYSYSTEM_H
 
 #include "../ECS.h"
-#include "../Components/Position.h"
+#include "../Components/Transform.h"
 
 using namespace ECS;
 
@@ -17,8 +17,8 @@ public:
     }
 
     void tick(World *pWorld, float deltaTime) override {
-        pWorld->each<Position>([&](Entity *ent, ComponentHandle<Position> position) {
-            position->y += gravityAmount * deltaTime;
+        pWorld->each<Transform>([&](Entity *ent, ComponentHandle<Transform> position) {
+            position->translate(glm::vec3(0.0f, gravityAmount * deltaTime, 0.0f));
         });
     }
 
