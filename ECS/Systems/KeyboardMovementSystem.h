@@ -58,7 +58,6 @@ class KeyboardMovementSystem : public EntitySystem, public EventSubscriber<Input
                 }
             });
         }
-        std::cout << "MyEvent was emitted!" << std::endl;
     }
 
     void tick(World *pWorld, float deltaTime) override {

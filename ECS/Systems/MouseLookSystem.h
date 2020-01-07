@@ -34,22 +34,22 @@ public:
             lastX = event.newX;
             lastY = event.newY;
 
-            yaw += xOffset * mouse->sensitivity;
-            pitch += yOffset * mouse->sensitivity;
+            mouse->yaw += xOffset * mouse->sensitivity;
+            mouse->pitch += yOffset * mouse->sensitivity;
         });
     }
 
     void tick(World *pWorld, float deltaTime) override {
         pWorld->each<Transform, MouseLook, Camera>([&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<MouseLook> mouse, ComponentHandle<Camera> camera) {
-            if(pitch > 89.0f)
-                pitch =  89.0f;
-            if(pitch < -89.0f)
-                pitch = -89.0f;
+            if(mouse->pitch > 89.0f)
+                mouse->pitch =  89.0f;
+            if(mouse->pitch < -89.0f)
+                mouse->pitch = -89.0f;
 
             glm::mat4x4 newTransform = glm::mat4x4(1.0);
 
-            newTransform = glm::rotate(newTransform, glm::radians((float)pitch), transform->right());
-            newTransform = glm::rotate(newTransform, glm::radians((float)yaw), glm::vec3(0.0, 1.0, 0.0));
+            newTransform = glm::rotate(newTransform, glm::radians((float)mouse->pitch), transform->right());
+            newTransform = glm::rotate(newTransform, glm::radians((float)mouse->yaw), glm::vec3(0.0, 1.0, 0.0));
 
             newTransform[3] = transform->matrix[3];
 
@@ -60,9 +60,6 @@ public:
 private:
     double lastX;
     double lastY;
-
-    double pitch = 0.0;
-    double yaw = 0.0;
 
     World *myWorld;
 };

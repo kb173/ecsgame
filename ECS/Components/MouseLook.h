@@ -9,6 +9,10 @@ struct MouseLook {
     explicit MouseLook(float sensitivity) : sensitivity(sensitivity) {}
 
     float sensitivity;
+
+    double yaw = 0.0;
+
+    double pitch = 0.0;
 };
 
 #endif //ECSGAME_MOUSELOOK_H
