@@ -10,14 +10,14 @@
 #include <vector>
 
 struct Mesh {
-    explicit Mesh(std::vector<float> vertices_vector) : vertices(&vertices_vector[0]), vertex_count(vertices_vector.size()) {
+    explicit Mesh(std::vector<float> vertices) : vertices(vertices), vertex_count(vertices.size() / 5) {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
 
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(&vertices), &vertices, GL_STATIC_DRAW);
 
         // position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -39,7 +39,7 @@ private:
     unsigned int vertex_count;
 
     /// Vertices in the format x, y, z, u, v
-    float *vertices;
+    std::vector<float> vertices;
 };
 
 #endif //ECSGAME_MESH_H
