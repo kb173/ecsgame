@@ -56,7 +56,11 @@ public:
             glm::vec3 cameraUp = glm::vec3(0.0, 1.0, 0.0);
             glm::vec3 cameraRight = glm::cross(cameraFront, cameraUp);
 
-            camera->view = glm::lookAt(cameraOrigin, cameraOrigin + cameraFront, cameraUp);
+            glm::mat4x4 lookAt = glm::lookAt(cameraOrigin, cameraOrigin + cameraFront, cameraUp);
+
+            lookAt[3] = glm::vec4(cameraOrigin, 1.0);
+
+            transform->matrix = lookAt;
         });
     }
 

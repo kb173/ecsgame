@@ -35,15 +35,15 @@ struct Transform {
     }
 
     glm::vec3 forward() {
-        return matrix * glm::vec4(0.0, 0.0, -1.0, 1.0);
+        return matrix * glm::vec4(0.0, 0.0, -1.0, 0.0);
     }
 
     glm::vec3 up() {
-        return  matrix * glm::vec4(0.0, 1.0, 0.0, 1.0);
+        return  matrix * glm::vec4(0.0, 1.0, 0.0, 0.0);
     }
 
     glm::vec3 right() {
-        return matrix * glm::vec4(1.0, 0.0, 0.0, 1.0);
+        return matrix * glm::vec4(1.0, 0.0, 0.0, 0.0);
     }
 };
 

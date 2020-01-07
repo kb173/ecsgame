@@ -23,7 +23,7 @@ public:
             shader.use();
 
             shader.setMat4("projection", camera->projection);
-            shader.setMat4("view", camera->view);
+            shader.setMat4("view", cameraTransform->matrix);
 
             pWorld->each<Mesh, Transform>([&](Entity *ent, ComponentHandle<Mesh> mesh, ComponentHandle<Transform> transform) {
                 shader.setMat4("model", transform->matrix);
