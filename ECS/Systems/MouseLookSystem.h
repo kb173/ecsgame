@@ -28,7 +28,7 @@ public:
 
     void receive(World *pWorld, const MouseMoveEvent &event) override {
         pWorld->each<Transform, MouseLook, Camera>([&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<MouseLook> mouse, ComponentHandle<Camera> camera) {
-            double xOffset = event.newX - lastX;
+            double xOffset = lastX - event.newX;
             double yOffset = lastY - event.newY;
 
             lastX = event.newX;
@@ -46,21 +46,14 @@ public:
             if(pitch < -89.0f)
                 pitch = -89.0f;
 
-            glm::vec3 direction;
-            direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-            direction.y = sin(glm::radians(pitch));
-            direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+            glm::mat4x4 newTransform = glm::mat4x4(1.0);
 
-            glm::vec3 cameraOrigin = transform->getPosition();
-            glm::vec3 cameraFront = glm::normalize(direction);
-            glm::vec3 cameraUp = glm::vec3(0.0, 1.0, 0.0);
-            glm::vec3 cameraRight = glm::cross(cameraFront, cameraUp);
+            newTransform = glm::rotate(newTransform, glm::radians((float)pitch), transform->right());
+            newTransform = glm::rotate(newTransform, glm::radians((float)yaw), glm::vec3(0.0, 1.0, 0.0));
 
-            glm::mat4x4 lookAt = glm::lookAt(cameraOrigin, cameraOrigin + cameraFront, cameraUp);
+            newTransform[3] = transform->matrix[3];
 
-            lookAt[3] = glm::vec4(cameraOrigin, 1.0);
-
-            transform->matrix = lookAt;
+            transform->matrix = newTransform;
         });
     }
 

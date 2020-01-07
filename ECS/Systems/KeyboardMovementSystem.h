@@ -44,7 +44,7 @@ class KeyboardMovementSystem : public EntitySystem, public EventSubscriber<Input
         } else if (event.key == GLFW_KEY_A) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->moving.x = 1;
+                    movement->moving.x = -1;
                 } else if (event.action == GLFW_RELEASE) {
                     movement->moving.x = 0;
                 }
@@ -52,7 +52,7 @@ class KeyboardMovementSystem : public EntitySystem, public EventSubscriber<Input
         } else if (event.key == GLFW_KEY_D) {
             myWorld->each<Movement>([&](Entity *ent, ComponentHandle<Movement> movement) {
                 if (event.action == GLFW_PRESS) {
-                    movement->moving.x = -1;
+                    movement->moving.x = 1;
                 } else if (event.action == GLFW_RELEASE) {
                     movement->moving.x = 0;
                 }
@@ -64,7 +64,7 @@ class KeyboardMovementSystem : public EntitySystem, public EventSubscriber<Input
     void tick(World *pWorld, float deltaTime) override {
         pWorld->each<Transform, Movement>(
                 [&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<Movement> movement) {
-                    transform->translate(glm::mat3x3(transform->matrix) * glm::vec3(movement->moving) * movement->speed * deltaTime);
+                    transform->translate(glm::vec3(movement->moving) * movement->speed * deltaTime);
                 });
     }
 
