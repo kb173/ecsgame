@@ -11,6 +11,7 @@
 #include "../Components/Camera.h"
 #include "../../Rendering/Shader.h"
 #include "../Components/ObjMesh.h"
+#include "../Components/Texture.h"
 
 using namespace ECS;
 
@@ -36,6 +37,14 @@ public:
             // TODO: Duplicate of loop above, but for ObjMesh instead of Mesh. Is it possible to do this implicitly via polymorphism?
             pWorld->each<ObjMesh, Transform>([&](Entity *ent, ComponentHandle<ObjMesh> mesh, ComponentHandle<Transform> transform) {
                 shader.setMat4("model", transform->matrix);
+
+                mesh->render();
+            });
+
+            // Render ObjMeshes with textures
+            pWorld->each<ObjMesh, Transform, Texture>([&](Entity *ent, ComponentHandle<ObjMesh> mesh, ComponentHandle<Transform> transform, ComponentHandle<Texture> texture) {
+                shader.setMat4("model", transform->matrix);
+                glBindTexture(GL_TEXTURE_2D, texture->id);
 
                 mesh->render();
             });

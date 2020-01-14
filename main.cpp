@@ -13,6 +13,7 @@
 #include "ECS/Systems/RenderSystem.h"
 #include "ECS/Systems/MouseLookSystem.h"
 #include "ECS/Components/ObjMesh.h"
+#include "ECS/Components/Texture.h"
 
 using namespace ECS;
 
@@ -82,6 +83,7 @@ int main() {
     Entity *box2 = world->create();
     box2->assign<Transform>();
     box2->assign<ObjMesh>("Resources/Monkey.obj");
+    box2->assign<Texture>("Resources/tex.jpg");
     box2->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -5.0f));
 
     Shader defaultShader("Shaders/default-vertex.vs", "Shaders/default-fragment.fs");
