@@ -47,7 +47,7 @@ struct Mesh {
         glBindVertexArray(0);
     }
 
-    void render() {
+    void render() const {
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glDrawElements(GL_TRIANGLES, vertex_count, GL_UNSIGNED_INT, 0);

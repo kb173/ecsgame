@@ -33,6 +33,7 @@ static void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 }
 
 int main() {
+    // TODO: Move this to RenderSystem?
     GLFWwindow *window;
 
     /* Initialize the library */
@@ -65,6 +66,10 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
 
+    // Transparency
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // TODO: Could be automated by getting all classes within 'ECS/Systems'
     // world->registerSystem(new GravitySystem(-9.8f));
     // world->registerSystem(new PositionDebugOutputSystem());
@@ -83,7 +88,7 @@ int main() {
     Entity *box2 = world->create();
     box2->assign<Transform>();
     box2->assign<ObjMesh>("Resources/Monkey.obj");
-    box2->assign<Texture>("Resources/tex.jpg");
+    box2->assign<Texture>("Resources/tex.png", Texture::Settings(true, true));
     box2->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -5.0f));
 
     Shader defaultShader("Shaders/default-vertex.vs", "Shaders/default-fragment.fs");

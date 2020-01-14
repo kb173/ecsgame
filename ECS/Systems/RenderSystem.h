@@ -28,28 +28,47 @@ public:
             shader.setMat4("projection", camera->projection);
             shader.setMat4("view", glm::inverse(cameraTransform->matrix));
 
+            std::vector<RenderObject> renderObjects;
+
             pWorld->each<Mesh, Transform>([&](Entity *ent, ComponentHandle<Mesh> mesh, ComponentHandle<Transform> transform) {
-                shader.setMat4("model", transform->matrix);
-
-                mesh->render();
+                renderObjects.emplace_back(RenderObject(transform->matrix, 0, mesh.get()));
             });
 
-            // TODO: Duplicate of loop above, but for ObjMesh instead of Mesh. Is it possible to do this implicitly via polymorphism?
+            // TODO: Is it possible to do get ObjMeshes in the Mesh loop above implicitly via polymorphism?
             pWorld->each<ObjMesh, Transform>([&](Entity *ent, ComponentHandle<ObjMesh> mesh, ComponentHandle<Transform> transform) {
-                shader.setMat4("model", transform->matrix);
-
-                mesh->render();
+                renderObjects.emplace_back(RenderObject(transform->matrix, 0, mesh.get()));
             });
 
-            // Render ObjMeshes with textures
+            // ObjMesh with textures
             pWorld->each<ObjMesh, Transform, Texture>([&](Entity *ent, ComponentHandle<ObjMesh> mesh, ComponentHandle<Transform> transform, ComponentHandle<Texture> texture) {
-                shader.setMat4("model", transform->matrix);
-                glBindTexture(GL_TEXTURE_2D, texture->id);
-
-                mesh->render();
+                renderObjects.emplace_back(RenderObject(transform->matrix, texture->id, mesh.get()));
             });
+
+            // TODO: Separate lists for transparent and non-transparent RenderObjects. The non-transparent list is
+            //  rendered first, then the transparent list is sorted and rendered.
+
+            for (const RenderObject &obj : renderObjects) {
+                shader.setMat4("model", obj.matrix);
+
+                // 0 can't be a valid texture name, so we use it for meshes without textures here
+                if (obj.texture_id != 0) {
+                    glBindTexture(GL_TEXTURE_2D, obj.texture_id);
+                }
+
+                obj.mesh.render();
+            }
         });
     }
+
+    struct RenderObject {
+        RenderObject(const glm::mat4 &matrix, unsigned int textureId, const Mesh &mesh) : matrix(matrix),
+                                                                                          texture_id(textureId),
+                                                                                          mesh(mesh) {}
+
+        glm::mat4 matrix;
+        unsigned int texture_id;
+        Mesh mesh;
+    };
 
 private:
     float gravityAmount;
