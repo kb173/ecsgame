@@ -7,3 +7,5 @@ Some code adapted from Joey de Vries' (https://twitter.com/JoeyDeVriez) tutorial
 OBJ-Loader from https://github.com/Bly7/OBJ-Loader.
 
 ECS library from https://github.com/redxdev/ECS.
+
+Image loader from https://github.com/nothings/stb/blob/master/stb_image.h.

@@ -82,7 +82,7 @@ int main() {
     Entity *box2 = world->create();
     box2->assign<Transform>();
     box2->assign<ObjMesh>("Resources/Monkey.obj");
-    box2->get<Transform>()->translate(glm::vec3(5.0f, 0.0f, 0.0f));
+    box2->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -5.0f));
 
     Shader defaultShader("Shaders/default-vertex.vs", "Shaders/default-fragment.fs");
 
