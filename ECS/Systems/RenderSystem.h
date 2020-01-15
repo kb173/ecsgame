@@ -35,12 +35,12 @@ public:
                 renderObjects.emplace_back(RenderObject(transform->matrix, 0, mesh.get()));
             });
 
+            glm::vec3 cameraPos = cameraTransform->getPosition();
+
             // TODO: Is it possible to do get ObjMeshes in the Mesh loop above implicitly via polymorphism?
             pWorld->each<ObjMesh, Transform>([&](Entity *ent, ComponentHandle<ObjMesh> mesh, ComponentHandle<Transform> transform) {
                 // Add the object to the renderObjects to draw if the distance is within the min and max distance of the mesh
-                glm::vec3 cameraPos = cameraTransform->getPosition();
-                glm::vec3 objPos = transform->getPosition();
-                float distance = glm::distance(cameraPos, objPos);
+                float distance = glm::distance(cameraPos, transform->getPosition());
 
                 if (distance > mesh->minDistance && distance < mesh->maxDistance) {
                     renderObjects.emplace_back(RenderObject(transform->matrix, 0, mesh.get()));
@@ -50,19 +50,16 @@ public:
             // ObjMesh with textures
             pWorld->each<ObjMesh, Transform, Texture>([&](Entity *ent, ComponentHandle<ObjMesh> mesh, ComponentHandle<Transform> transform, ComponentHandle<Texture> texture) {
                 // Add the object to the renderObjects to draw if the distance is within the min and max distance of the mesh
-                glm::vec3 cameraPos = cameraTransform->getPosition();
-                glm::vec3 objPos = transform->getPosition();
-                float distance = glm::distance(cameraPos, objPos);
+                float distance = glm::distance(cameraPos, transform->getPosition());
 
                 if (distance > mesh->minDistance && distance < mesh->maxDistance) {
                     renderObjects.emplace_back(RenderObject(transform->matrix, texture->id, mesh.get()));
                 }
             });
 
+            // LODObjMesh with Texture
             pWorld->each<LODObjMesh, Transform, Texture>([&](Entity *ent, ComponentHandle<LODObjMesh> lodMesh, ComponentHandle<Transform> transform, ComponentHandle<Texture> texture) {
-                glm::vec3 cameraPos = cameraTransform->getPosition();
-                glm::vec3 objPos = transform->getPosition();
-                float distance = glm::distance(cameraPos, objPos);
+                float distance = glm::distance(cameraPos, transform->getPosition());
 
                 for (const auto &mesh : lodMesh->meshes) {
                     if (distance > mesh.minDistance && distance < mesh.maxDistance) {
