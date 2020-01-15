@@ -12,6 +12,7 @@
 #include "../../Rendering/Shader.h"
 #include "../Components/ObjMesh.h"
 #include "../Components/Texture.h"
+#include "../Components/LODObjMesh.h"
 
 using namespace ECS;
 
@@ -36,12 +37,38 @@ public:
 
             // TODO: Is it possible to do get ObjMeshes in the Mesh loop above implicitly via polymorphism?
             pWorld->each<ObjMesh, Transform>([&](Entity *ent, ComponentHandle<ObjMesh> mesh, ComponentHandle<Transform> transform) {
-                renderObjects.emplace_back(RenderObject(transform->matrix, 0, mesh.get()));
+                // Add the object to the renderObjects to draw if the distance is within the min and max distance of the mesh
+                glm::vec3 cameraPos = cameraTransform->getPosition();
+                glm::vec3 objPos = transform->getPosition();
+                float distance = glm::distance(cameraPos, objPos);
+
+                if (distance > mesh->minDistance && distance < mesh->maxDistance) {
+                    renderObjects.emplace_back(RenderObject(transform->matrix, 0, mesh.get()));
+                }
             });
 
             // ObjMesh with textures
             pWorld->each<ObjMesh, Transform, Texture>([&](Entity *ent, ComponentHandle<ObjMesh> mesh, ComponentHandle<Transform> transform, ComponentHandle<Texture> texture) {
-                renderObjects.emplace_back(RenderObject(transform->matrix, texture->id, mesh.get()));
+                // Add the object to the renderObjects to draw if the distance is within the min and max distance of the mesh
+                glm::vec3 cameraPos = cameraTransform->getPosition();
+                glm::vec3 objPos = transform->getPosition();
+                float distance = glm::distance(cameraPos, objPos);
+
+                if (distance > mesh->minDistance && distance < mesh->maxDistance) {
+                    renderObjects.emplace_back(RenderObject(transform->matrix, texture->id, mesh.get()));
+                }
+            });
+
+            pWorld->each<LODObjMesh, Transform, Texture>([&](Entity *ent, ComponentHandle<LODObjMesh> lodMesh, ComponentHandle<Transform> transform, ComponentHandle<Texture> texture) {
+                glm::vec3 cameraPos = cameraTransform->getPosition();
+                glm::vec3 objPos = transform->getPosition();
+                float distance = glm::distance(cameraPos, objPos);
+
+                for (const auto &mesh : lodMesh->meshes) {
+                    if (distance > mesh.minDistance && distance < mesh.maxDistance) {
+                        renderObjects.emplace_back(RenderObject(transform->matrix, texture->id, mesh));
+                    }
+                }
             });
 
             // TODO: Separate lists for transparent and non-transparent RenderObjects. The non-transparent list is
@@ -69,9 +96,6 @@ public:
         unsigned int texture_id;
         Mesh mesh;
     };
-
-private:
-    float gravityAmount;
 };
 
 #endif //ECSGAME_RENDERSYSTEM_H

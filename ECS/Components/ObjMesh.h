@@ -9,7 +9,21 @@
 #include "../../Util/OBJ_Loader.h"
 
 struct ObjMesh : public Mesh {
-    explicit ObjMesh(const std::string &path) : Mesh(getVerticesFromFile(path), getIndicesFromFile(path)) {}
+    struct Settings {
+        Settings(float minDistanceForRender, float maxDistanceForRender) : minDistanceForRender(
+                minDistanceForRender), maxDistanceForRender(maxDistanceForRender) {}
+
+        float minDistanceForRender = 0.0;
+        float maxDistanceForRender = 1000.0;
+    };
+
+    explicit ObjMesh(const std::string &path, const Settings &settings) : Mesh(getVerticesFromFile(path), getIndicesFromFile(path)),
+                                                                                 minDistance(settings.minDistanceForRender),
+                                                                                 maxDistance(settings.maxDistanceForRender) {}
+
+    float minDistance;
+
+    float maxDistance;
 
 private:
     static std::vector<float> getVerticesFromFile(const std::string &path) {

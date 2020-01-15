@@ -81,13 +81,13 @@ int main() {
 
     Entity *player = world->create();
     player->assign<Transform>();
-    player->assign<Movement>(glm::vec3(1.f, 1.f, 1.f));
+    player->assign<Movement>(glm::vec3(2.f, 2.f, 2.f));
     player->assign<Camera>(70.0f, 640, 480, 0.1f, 100.0f);
     player->assign<MouseLook>(0.1);
 
     Entity *box2 = world->create();
     box2->assign<Transform>();
-    box2->assign<ObjMesh>("Resources/Monkey.obj");
+    box2->assign<LODObjMesh>(std::vector{ObjMesh("Resources/Monkey.obj", ObjMesh::Settings(0.0, 8.0)), ObjMesh("Resources/MonkeySimple.obj", ObjMesh::Settings(8.0, 100.0))});
     box2->assign<Texture>("Resources/tex.png", Texture::Settings(true, true));
     box2->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -5.0f));
 

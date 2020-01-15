@@ -30,19 +30,19 @@ struct Transform {
         matrix = glm::rotate(matrix, glm::radians(degrees), axis);
     }
 
-    glm::vec3 getPosition() {
+    glm::vec3 getPosition() const {
         return matrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
-    glm::vec3 forward() {
+    glm::vec3 forward() const {
         return matrix * glm::vec4(0.0, 0.0, -1.0, 0.0);
     }
 
-    glm::vec3 up() {
+    glm::vec3 up() const {
         return  matrix * glm::vec4(0.0, 1.0, 0.0, 0.0);
     }
 
-    glm::vec3 right() {
+    glm::vec3 right() const {
         return matrix * glm::vec4(1.0, 0.0, 0.0, 0.0);
     }
 };
