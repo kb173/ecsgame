@@ -84,12 +84,31 @@ int main() {
     player->assign<Movement>(glm::vec3(2.f, 2.f, 2.f));
     player->assign<Camera>(70.0f, 640, 480, 0.1f, 100.0f);
     player->assign<MouseLook>(0.1);
+    player->get<Transform>()->translate(glm::vec3(0.0f, 1.0f, 2.0f));
 
-    Entity *box2 = world->create();
-    box2->assign<Transform>();
-    box2->assign<LODObjMesh>(std::vector{ObjMesh("Resources/Monkey.obj", ObjMesh::Settings(0.0, 8.0)), ObjMesh("Resources/MonkeySimple.obj", ObjMesh::Settings(8.0, 100.0))});
-    box2->assign<Texture>("Resources/tex.png", Texture::Settings(true, true));
-    box2->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -5.0f));
+    Entity *monkey = world->create();
+    monkey->assign<Transform>();
+    monkey->assign<LODObjMesh>(std::vector{ObjMesh("Resources/Monkey.obj", ObjMesh::Settings(0.0, 8.0)), ObjMesh("Resources/MonkeySimple.obj", ObjMesh::Settings(8.0, 100.0))});
+    monkey->assign<Texture>("Resources/Marble.jpg", Texture::Settings(true, false));
+    monkey->get<Transform>()->translate(glm::vec3(0.0f, 2.0f, -6.0f));
+
+    Entity *wall1 = world->create();
+    wall1->assign<Transform>();
+    wall1->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
+    wall1->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
+    wall1->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -2.0f));
+
+    Entity *wall2 = world->create();
+    wall2->assign<Transform>();
+    wall2->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
+    wall2->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
+    wall2->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -10.0f));
+
+    Entity *ground = world->create();
+    ground->assign<Transform>();
+    ground->assign<ObjMesh>(ObjMesh("Resources/Ground.obj", ObjMesh::Settings()));
+    ground->assign<Texture>("Resources/Grass.jpg", Texture::Settings(true, false));
+    ground->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, 0.0f));
 
     Shader defaultShader("Shaders/default-vertex.vs", "Shaders/default-fragment.fs");
 

@@ -13,6 +13,8 @@ struct ObjMesh : public Mesh {
         Settings(float minDistanceForRender, float maxDistanceForRender) : minDistanceForRender(
                 minDistanceForRender), maxDistanceForRender(maxDistanceForRender) {}
 
+        Settings() = default;
+
         float minDistanceForRender = 0.0;
         float maxDistanceForRender = 1000.0;
     };
