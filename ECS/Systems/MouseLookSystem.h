@@ -41,10 +41,10 @@ public:
 
     void tick(World *pWorld, float deltaTime) override {
         pWorld->each<Transform, MouseLook, Camera>([&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<MouseLook> mouse, ComponentHandle<Camera> camera) {
-            if(mouse->pitch > 89.0f)
-                mouse->pitch =  89.0f;
-            if(mouse->pitch < -89.0f)
-                mouse->pitch = -89.0f;
+            if(mouse->pitch > 50.0f)
+                mouse->pitch =  50.0f;
+            if(mouse->pitch < -50.0f)
+                mouse->pitch = -50.0f;
 
             glm::mat4x4 newTransform = glm::mat4x4(1.0);
 

@@ -14,6 +14,8 @@
 #include "ECS/Systems/MouseLookSystem.h"
 #include "ECS/Components/ObjMesh.h"
 #include "ECS/Components/Texture.h"
+#include "ECS/Components/SineAnimation.h"
+#include "ECS/Systems/SineAnimationSystem.h"
 
 using namespace ECS;
 
@@ -75,6 +77,7 @@ int main() {
     // world->registerSystem(new PositionDebugOutputSystem());
     world->registerSystem(new KeyboardMovementSystem());
     world->registerSystem(new MouseLookSystem(640, 480));
+    world->registerSystem(new SineAnimationSystem());
 
     RenderSystem* renderSystem = new RenderSystem();
     world->registerSystem(renderSystem);
@@ -90,6 +93,7 @@ int main() {
     monkey->assign<Transform>();
     monkey->assign<LODObjMesh>(std::vector{ObjMesh("Resources/Monkey.obj", ObjMesh::Settings(0.0, 8.0)), ObjMesh("Resources/MonkeySimple.obj", ObjMesh::Settings(8.0, 100.0))});
     monkey->assign<Texture>("Resources/Marble.jpg", Texture::Settings(true, false));
+    monkey->assign<SineAnimation>(glm::vec3(0.0, 0.3, 0.0), 0.5);
     monkey->get<Transform>()->translate(glm::vec3(0.0f, 2.0f, -6.0f));
 
     Entity *wall1 = world->create();
@@ -103,6 +107,20 @@ int main() {
     wall2->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
     wall2->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
     wall2->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -10.0f));
+
+    Entity *wall3 = world->create();
+    wall3->assign<Transform>();
+    wall3->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
+    wall3->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
+    wall3->get<Transform>()->translate(glm::vec3(4.0f, 0.0f, -6.0f));
+    wall3->get<Transform>()->rotate(90.0, glm::vec3(0.0, 1.0, 0.0));
+
+    Entity *wall4 = world->create();
+    wall4->assign<Transform>();
+    wall4->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
+    wall4->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
+    wall4->get<Transform>()->translate(glm::vec3(-4.0f, 0.0f, -6.0f));
+    wall4->get<Transform>()->rotate(90.0, glm::vec3(0.0, 1.0, 0.0));
 
     Entity *ground = world->create();
     ground->assign<Transform>();
