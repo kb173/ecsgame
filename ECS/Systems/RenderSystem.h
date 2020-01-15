@@ -13,6 +13,8 @@
 #include "../Components/ObjMesh.h"
 #include "../Components/Texture.h"
 #include "../Components/LODObjMesh.h"
+#include "../Components/DirectionalLight.h"
+#include "../../Rendering/Material.h"
 
 using namespace ECS;
 
@@ -26,15 +28,22 @@ public:
 
             shader.use();
 
+            // Lighting
+            // TODO: Currently only the last light is used!
+            pWorld->each<DirectionalLight>([&](Entity *ent, ComponentHandle<DirectionalLight> light) {
+                shader.setVec3("lightDirection", light->direction);
+            });
+
             shader.setMat4("projection", camera->projection);
             shader.setMat4("view", glm::inverse(cameraTransform->matrix));
+            shader.setVec3("cameraPosition", cameraTransform->getPosition());
 
             std::vector<RenderObject> renderObjects;
             std::vector<RenderObject> transparentRenderObjects;
 
-            pWorld->each<Mesh, Transform>([&](Entity *ent, ComponentHandle<Mesh> mesh, ComponentHandle<Transform> transform) {
+            /*pWorld->each<Mesh, Transform>([&](Entity *ent, ComponentHandle<Mesh> mesh, ComponentHandle<Transform> transform) {
                 renderObjects.emplace_back(RenderObject(transform->matrix, 0, mesh.get(), 0));
-            });
+            });*/
 
             glm::vec3 cameraPos = cameraTransform->getPosition();
 
@@ -55,26 +64,40 @@ public:
                 float distance = glm::distance(cameraPos, transform->getPosition());
 
                 if (distance > mesh->minDistance && distance < mesh->maxDistance) {
+                    // Get optional components
+                    ComponentHandle<Texture> textureComponent = ent->get<Texture>();
+                    ComponentHandle<Material> materialComponent = ent->get<Material>();
+
+                    Material material = materialComponent.isValid() ? materialComponent.get() : Material();
+                    unsigned int textureID = textureComponent.isValid() ? textureComponent->id : 0;
+
                     // Put it into the list of transparent render objects if the texture wants to be rendered transparently
-                    if (texture->render_transparent) {
-                        transparentRenderObjects.emplace_back(RenderObject(transform->matrix, texture->id, mesh.get(), distance));
+                    if (textureComponent.isValid() && textureComponent->render_transparent) {
+                        transparentRenderObjects.emplace_back(RenderObject(transform->matrix, textureID, mesh.get(), distance, material));
                     } else {
-                        renderObjects.emplace_back(RenderObject(transform->matrix, texture->id, mesh.get(), distance));
+                        renderObjects.emplace_back(RenderObject(transform->matrix, textureID, mesh.get(), distance, material));
                     }
                 }
             });
 
             // LODObjMesh with Texture
-            pWorld->each<LODObjMesh, Transform, Texture>([&](Entity *ent, ComponentHandle<LODObjMesh> lodMesh, ComponentHandle<Transform> transform, ComponentHandle<Texture> texture) {
+            pWorld->each<LODObjMesh, Transform>([&](Entity *ent, ComponentHandle<LODObjMesh> lodMesh, ComponentHandle<Transform> transform) {
                 float distance = glm::distance(cameraPos, transform->getPosition());
 
                 for (const auto &mesh : lodMesh->meshes) {
                     if (distance > mesh.minDistance && distance < mesh.maxDistance) {
+                        // Get optional components
+                        ComponentHandle<Texture> textureComponent = ent->get<Texture>();
+                        ComponentHandle<Material> materialComponent = ent->get<Material>();
+
+                        Material material = materialComponent.isValid() ? materialComponent.get() : Material();
+                        unsigned int textureID = textureComponent.isValid() ? textureComponent->id : 0;
+
                         // Put it into the list of transparent render objects if the texture wants to be rendered transparently
-                        if (texture->render_transparent) {
-                            transparentRenderObjects.emplace_back(RenderObject(transform->matrix, texture->id, mesh, distance));
+                        if (textureComponent.isValid() && textureComponent->render_transparent) {
+                            transparentRenderObjects.emplace_back(RenderObject(transform->matrix, textureID, mesh, distance, material));
                         } else {
-                            renderObjects.emplace_back(RenderObject(transform->matrix, texture->id, mesh, distance));
+                            renderObjects.emplace_back(RenderObject(transform->matrix, textureID, mesh, distance, material));
                         }
                     }
                 }
@@ -95,11 +118,12 @@ public:
     }
 
     struct RenderObject {
-        RenderObject(const glm::mat4 &matrix, unsigned int textureId, const Mesh &mesh, float distance)
+        RenderObject(const glm::mat4 &matrix, unsigned int textureId, const Mesh &mesh, float distance, const Material &material)
                                                                                         : matrix(matrix),
                                                                                           texture_id(textureId),
                                                                                           mesh(mesh),
-                                                                                          distance(distance) {}
+                                                                                          distance(distance),
+                                                                                          material(material) {}
 
         void render(Shader shader) const {
             shader.setMat4("model", matrix);
@@ -109,6 +133,9 @@ public:
                 glBindTexture(GL_TEXTURE_2D, texture_id);
             }
 
+            shader.setFloat("diffuseStrength", material.diffuse);
+            shader.setFloat("specularStrength", material.specular);
+
             mesh.render();
         }
 
@@ -116,6 +143,7 @@ public:
         unsigned int texture_id;
         Mesh mesh;
         float distance;
+        Material material;
     };
 };
 

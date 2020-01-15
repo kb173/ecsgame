@@ -32,6 +32,9 @@ public:
     /// Set a uniform mat4 in the shader
     void setMat4(const std::string &name, glm::mat4 mat) const;
 
+    /// Set a uniform vec3 in the shader
+    void setVec3(const std::string &name, glm::vec3 vec) const;
+
 private:
     static void checkCompileErrors(unsigned int shader, const std::string &type);
 };

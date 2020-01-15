@@ -16,6 +16,7 @@
 #include "ECS/Components/Texture.h"
 #include "ECS/Components/SineAnimation.h"
 #include "ECS/Systems/SineAnimationSystem.h"
+#include "ECS/Components/DirectionalLight.h"
 
 using namespace ECS;
 
@@ -43,7 +44,7 @@ int main() {
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1280, 720, "Hello World", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -76,7 +77,7 @@ int main() {
     // world->registerSystem(new GravitySystem(-9.8f));
     // world->registerSystem(new PositionDebugOutputSystem());
     world->registerSystem(new KeyboardMovementSystem());
-    world->registerSystem(new MouseLookSystem(640, 480));
+    world->registerSystem(new MouseLookSystem(1280, 720));
     world->registerSystem(new SineAnimationSystem());
 
     RenderSystem* renderSystem = new RenderSystem();
@@ -85,33 +86,38 @@ int main() {
     Entity *player = world->create();
     player->assign<Transform>();
     player->assign<Movement>(glm::vec3(2.f, 2.f, 2.f));
-    player->assign<Camera>(70.0f, 640, 480, 0.1f, 100.0f);
+    player->assign<Camera>(70.0f, 1280, 720, 0.1f, 100.0f);
     player->assign<MouseLook>(0.1);
     player->get<Transform>()->translate(glm::vec3(0.0f, 1.0f, 2.0f));
 
     Entity *monkey = world->create();
     monkey->assign<Transform>();
-    monkey->assign<LODObjMesh>(std::vector{ObjMesh("Resources/Monkey.obj", ObjMesh::Settings(0.0, 8.0)), ObjMesh("Resources/MonkeySimple.obj", ObjMesh::Settings(8.0, 100.0))});
+    monkey->assign<LODObjMesh>(std::vector{ObjMesh("Resources/Monkey.obj",ObjMesh::Settings(0.0, 8.0, 0.4, 0.6)),
+                                           ObjMesh("Resources/MonkeySimple.obj", ObjMesh::Settings(8.0, 100.0, 0.4, 0.6))});
     monkey->assign<Texture>("Resources/Marble.jpg", Texture::Settings(true, false));
     monkey->assign<SineAnimation>(glm::vec3(0.0, 0.3, 0.0), 0.5);
+    monkey->assign<Material>(0.6, 0.6);
     monkey->get<Transform>()->translate(glm::vec3(0.0f, 2.0f, -6.0f));
 
     Entity *wall1 = world->create();
     wall1->assign<Transform>();
     wall1->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
     wall1->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
+    wall1->assign<Material>(0.2, 0.8);
     wall1->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -2.0f));
 
     Entity *wall2 = world->create();
     wall2->assign<Transform>();
     wall2->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
     wall2->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
+    wall2->assign<Material>(0.2, 0.8);
     wall2->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -10.0f));
 
     Entity *wall3 = world->create();
     wall3->assign<Transform>();
     wall3->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
     wall3->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
+    wall3->assign<Material>(0.2, 0.8);
     wall3->get<Transform>()->translate(glm::vec3(4.0f, 0.0f, -6.0f));
     wall3->get<Transform>()->rotate(90.0, glm::vec3(0.0, 1.0, 0.0));
 
@@ -119,6 +125,7 @@ int main() {
     wall4->assign<Transform>();
     wall4->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
     wall4->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
+    wall4->assign<Material>(0.2, 0.8);
     wall4->get<Transform>()->translate(glm::vec3(-4.0f, 0.0f, -6.0f));
     wall4->get<Transform>()->rotate(90.0, glm::vec3(0.0, 1.0, 0.0));
 
@@ -127,6 +134,9 @@ int main() {
     ground->assign<ObjMesh>(ObjMesh("Resources/Ground.obj", ObjMesh::Settings()));
     ground->assign<Texture>("Resources/Grass.jpg", Texture::Settings(true, false));
     ground->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, 0.0f));
+
+    Entity *sun = world->create();
+    sun->assign<DirectionalLight>(glm::normalize(glm::vec3(1.0, 1.0, 1.0)));
 
     Shader defaultShader("Shaders/default-vertex.vs", "Shaders/default-fragment.fs");
 
