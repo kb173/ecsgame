@@ -44,7 +44,7 @@ int main() {
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1280, 720, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1280, 720, "ECSGame", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -133,6 +133,7 @@ int main() {
     ground->assign<Transform>();
     ground->assign<ObjMesh>(ObjMesh("Resources/Ground.obj", ObjMesh::Settings()));
     ground->assign<Texture>("Resources/Grass.jpg", Texture::Settings(true, false));
+    ground->assign<Material>(1.0, 0.0);
     ground->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, 0.0f));
 
     Entity *sun = world->create();
