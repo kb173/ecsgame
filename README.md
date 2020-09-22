@@ -1,5 +1,7 @@
 # ECSGame
 
+![screenshot](screenshot.png)
+
 C++ ECS OpenGL game demo.
 
 Building requires OpenGL 3.2+, GLFW, GLM and GLAD.
