@@ -75,24 +75,70 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
     }
 
     void tick(World *pWorld, float deltaTime) override {
-        PathMove::Path path;
-
-        path.points = std::vector<glm::vec3>{
-            glm::vec3(0.0, 2.0, 0.0),
-            glm::vec3(0.0, 2.0, 1.0),
-            glm::vec3(2.0, 2.0, 2.0),
-            glm::vec3(1.0, 3.0, 3.0),
-            glm::vec3(-2.0, 2.0, 4.0),
-            glm::vec3(2.0, 2.0, 4.0),
-        };
-
         pWorld->each<Transform, PathMove>(
                 [&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<PathMove> pathmove) {
+                    // Shorthand for the path (we'll use this a lot)
+                    PathMove::Path path = pathmove->path;
+
+                    // Add the passed time
                     pathmove->time_passed += deltaTime;
 
-                    // Move from the second to the third point for now
-                    glm::vec3 point = catmul(0.5f, path.points[0], path.points[1], path.points[2], path.points[3], pathmove->time_passed * 0.5);
+                    // Shorthand for number of points in the path
+                    int num_points = path.points.size();
+
+                    if (pathmove->time_passed >= 1.0) {
+                        // If we passed the last target, set the current_point_index to that target
+                        pathmove->time_passed -= 1.0;
+                        pathmove->current_point_index += 1;
+
+                        // If the point index is greater than the second to last one, reset
+                        // (The point index specifies the point we're coming from, not the one we're moving towards)
+                        if (pathmove->current_point_index >= num_points - 1) {
+                            pathmove->current_point_index = 0;
+                        }
+                    }
+
+                    // The four points which are needed for the spline
+                    // p1 and p2 are always the same (the current origin and the current target), but the rest depends on edge cases
+                    glm::vec3 p0;
+                    glm::vec3 p1 = path.points[pathmove->current_point_index];
+                    glm::vec3 p2 = path.points[pathmove->current_point_index + 1];
+                    glm::vec3 p3;
+
+                    if (pathmove->current_point_index == num_points - 2) {
+                        // We're moving towards the last point, so the point after that needs to be interpolated.
+                        // We interpolate linearly along the line from this point to the target point.
+                        glm::vec3 interp_direction = p2 - p1;
+                        p3 = p2 + interp_direction * 2.0f;
+                    } else {
+                        // We're fine - use the point after the target for p3
+                        p2 = path.points[pathmove->current_point_index + 1];
+                        p3 = path.points[pathmove->current_point_index + 2];
+                    }
+
+                    if (pathmove->current_point_index == 0) {
+                        // We're at the first point, so the point before this needs to be interpolated.
+                        // We interpolate linearly along the line from this to the next point (backwards).
+                        glm::vec3 interp_direction = path.points[pathmove->current_point_index] - path.points[pathmove->current_point_index + 1];
+                        p0 = path.points[pathmove->current_point_index] + interp_direction;
+                    } else {
+                        // We're fine - use the point before the current point
+                        p0 = path.points[pathmove->current_point_index - 1];
+                    }
+
+                    // Calculate the point on the spline
+                    glm::vec3 point = catmul(0.5f,
+                            p0,
+                            p1,
+                            p2,
+                            p3,
+                            pathmove->time_passed);
+                    
+                    // Apply
                     transform->set_position(point);
+
+                    // FIXME: Debugging output
+                    std::cout << point.x << ", " << point.y << ", " << point.z << std::endl;
                 });
     }
 

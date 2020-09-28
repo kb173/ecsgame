@@ -6,16 +6,18 @@
 
 struct PathMove {
     struct Path {
+        Path(std::vector<glm::vec3> points) : points(points) {}
+        
         std::vector<glm::vec3> points;
     };
 
-    PathMove(double speed) : speed(speed) {}
+    PathMove(double speed, Path path) : speed(speed), path(path) {}
 
     double speed;
 
     Path path;
 
-    int current_point_index;
+    int current_point_index = 0;
 
     float time_passed = 0.0;
 };

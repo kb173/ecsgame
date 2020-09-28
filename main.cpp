@@ -91,7 +91,15 @@ int main() {
     //player->assign<Movement>(glm::vec3(2.f, 2.f, 2.f));
     //player->assign<MouseLook>(0.1);
     player->assign<Camera>(70.0f, 1280, 720, 0.1f, 100.0f);
-    player->assign<PathMove>(10.0);
+    player->assign<PathMove>(10.0, PathMove::Path(std::vector<glm::vec3>{
+            glm::vec3(0.0, 2.0, 0.0),
+            glm::vec3(0.0, 2.0, 1.0),
+            glm::vec3(2.0, 2.0, 2.0),
+            glm::vec3(1.0, 3.0, 3.0),
+            glm::vec3(-2.0, 2.0, 4.0),
+            glm::vec3(2.0, 2.0, 4.0),
+            glm::vec3(0.0, 2.0, 10.0)
+        }));
     player->get<Transform>()->translate(glm::vec3(0.0f, 1.0f, 2.0f));
 
     Entity *monkey = world->create();
