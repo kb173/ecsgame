@@ -12,11 +12,13 @@
 #include "ECS/Systems/KeyboardMovementSystem.h"
 #include "ECS/Systems/RenderSystem.h"
 #include "ECS/Systems/MouseLookSystem.h"
+#include "ECS/Systems/PathMoveSystem.h"
 #include "ECS/Components/ObjMesh.h"
 #include "ECS/Components/Texture.h"
 #include "ECS/Components/SineAnimation.h"
 #include "ECS/Systems/SineAnimationSystem.h"
 #include "ECS/Components/DirectionalLight.h"
+#include "ECS/Components/PathMove.h"
 
 using namespace ECS;
 
@@ -78,6 +80,7 @@ int main() {
     // world->registerSystem(new PositionDebugOutputSystem());
     world->registerSystem(new KeyboardMovementSystem());
     world->registerSystem(new MouseLookSystem(1280, 720));
+    world->registerSystem(new PathMoveSystem());
     world->registerSystem(new SineAnimationSystem());
 
     RenderSystem* renderSystem = new RenderSystem();
@@ -85,9 +88,10 @@ int main() {
 
     Entity *player = world->create();
     player->assign<Transform>();
-    player->assign<Movement>(glm::vec3(2.f, 2.f, 2.f));
+    //player->assign<Movement>(glm::vec3(2.f, 2.f, 2.f));
+    //player->assign<MouseLook>(0.1);
     player->assign<Camera>(70.0f, 1280, 720, 0.1f, 100.0f);
-    player->assign<MouseLook>(0.1);
+    player->assign<PathMove>(10.0);
     player->get<Transform>()->translate(glm::vec3(0.0f, 1.0f, 2.0f));
 
     Entity *monkey = world->create();

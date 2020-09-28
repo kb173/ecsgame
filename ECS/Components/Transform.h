@@ -30,6 +30,11 @@ struct Transform {
         matrix = glm::rotate(matrix, glm::radians(degrees), axis);
     }
 
+    void set_position(glm::vec3 position) {
+        glm::vec3 difference = getPosition() - position;
+        translate(-difference);
+    }
+
     glm::vec3 getPosition() const {
         return matrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     }
