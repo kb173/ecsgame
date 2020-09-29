@@ -93,24 +93,23 @@ int main() {
     player->assign<Camera>(70.0f, 1280, 720, 0.1f, 100.0f);
     player->assign<PathMove>(10.0, PathMove::Path(std::vector<glm::vec3>{
             glm::vec3(0.0, 2.0, 0.0),
-            glm::vec3(0.0, 2.0, -1.0),
-            glm::vec3(2.0, 2.0, -2.0),
-            glm::vec3(1.0, 3.0, -3.0),
-            glm::vec3(-2.0, 2.0, -4.0),
+            glm::vec3(-2.0, 2.0, -1.0),
+            glm::vec3(-1.0, 2.0, -2.0),
+            glm::vec3(4.0, 3.0, -3.0),
             glm::vec3(2.0, 2.0, -4.0),
+            glm::vec3(1.0, 2.0, -4.0),
             glm::vec3(0.0, 2.0, -10.0)
         }),
         PathMove::Views(std::vector<glm::quat>{
             glm::quat(0.0, 0.0, 0.0, 0.0),
+            glm::angleAxis(glm::radians(-10.f), glm::vec3(0.f, 1.f, 0.f)),
             glm::angleAxis(glm::radians(10.f), glm::vec3(0.f, 1.f, 0.f)),
-            glm::angleAxis(glm::radians(30.f), glm::vec3(0.f, 1.f, 0.f)),
             glm::angleAxis(glm::radians(40.f), glm::vec3(0.f, 1.f, 0.f)),
-            glm::angleAxis(glm::radians(50.f), glm::vec3(0.f, 1.f, 0.f)),
-            glm::angleAxis(glm::radians(70.f), glm::vec3(0.f, 1.f, 0.f)),
-            glm::angleAxis(glm::radians(80.f), glm::vec3(0.f, 1.f, 0.f))
+            glm::angleAxis(glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(95.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f))
         })
     );
-    player->get<Transform>()->translate(glm::vec3(0.0f, 1.0f, 2.0f));
 
     Entity *monkey = world->create();
     monkey->assign<Transform>();
@@ -119,28 +118,28 @@ int main() {
     monkey->assign<Texture>("Resources/Marble.jpg", Texture::Settings(true, false));
     monkey->assign<SineAnimation>(glm::vec3(0.0, 0.3, 0.0), 0.5);
     monkey->assign<Material>(0.6, 0.6);
-    monkey->get<Transform>()->translate(glm::vec3(0.0f, 2.0f, -6.0f));
+    monkey->get<Transform>()->set_origin(glm::vec3(0.0f, 2.0f, -6.0f));
 
     Entity *wall1 = world->create();
     wall1->assign<Transform>();
     wall1->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
     wall1->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
     wall1->assign<Material>(0.2, 0.8);
-    wall1->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -2.0f));
+    wall1->get<Transform>()->set_origin(glm::vec3(0.0f, 0.0f, -2.0f));
 
     Entity *wall2 = world->create();
     wall2->assign<Transform>();
     wall2->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
     wall2->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
     wall2->assign<Material>(0.2, 0.8);
-    wall2->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, -10.0f));
+    wall2->get<Transform>()->set_origin(glm::vec3(0.0f, 0.0f, -10.0f));
 
     Entity *wall3 = world->create();
     wall3->assign<Transform>();
     wall3->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
     wall3->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
     wall3->assign<Material>(0.2, 0.8);
-    wall3->get<Transform>()->translate(glm::vec3(4.0f, 0.0f, -6.0f));
+    wall3->get<Transform>()->set_origin(glm::vec3(4.0f, 0.0f, -6.0f));
     wall3->get<Transform>()->rotate(90.0, glm::vec3(0.0, 1.0, 0.0));
 
     Entity *wall4 = world->create();
@@ -148,7 +147,7 @@ int main() {
     wall4->assign<ObjMesh>(ObjMesh("Resources/Wall.obj", ObjMesh::Settings()));
     wall4->assign<Texture>("Resources/Glass.png", Texture::Settings(true, true));
     wall4->assign<Material>(0.2, 0.8);
-    wall4->get<Transform>()->translate(glm::vec3(-4.0f, 0.0f, -6.0f));
+    wall4->get<Transform>()->set_origin(glm::vec3(-4.0f, 0.0f, -6.0f));
     wall4->get<Transform>()->rotate(90.0, glm::vec3(0.0, 1.0, 0.0));
 
     Entity *ground = world->create();
@@ -156,7 +155,7 @@ int main() {
     ground->assign<ObjMesh>(ObjMesh("Resources/Ground.obj", ObjMesh::Settings()));
     ground->assign<Texture>("Resources/Grass.jpg", Texture::Settings(true, false));
     ground->assign<Material>(1.0, 0.0);
-    ground->get<Transform>()->translate(glm::vec3(0.0f, 0.0f, 0.0f));
+    ground->get<Transform>()->set_origin(glm::vec3(0.0f, 0.0f, 0.0f));
 
     Entity *sun = world->create();
     sun->assign<DirectionalLight>(glm::normalize(glm::vec3(1.0, 1.0, 1.0)));

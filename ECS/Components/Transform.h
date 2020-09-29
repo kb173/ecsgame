@@ -15,9 +15,14 @@ struct Transform {
     Transform() = default;
 
     glm::mat4 matrix = glm::mat4(1.0f); // Initialize as identity
+    glm::vec3 origin = glm::vec3(0.0f, 0.0f, 0.0f);
 
     void translate(glm::vec3 offset) {
         matrix = glm::translate(matrix, offset);
+    }
+
+    glm::vec3 get_translation() {
+        return glm::vec3(matrix[3]);
     }
 
     void uniform_scale(float factor) {
@@ -32,9 +37,8 @@ struct Transform {
         matrix = glm::rotate(matrix, glm::radians(degrees), axis);
     }
 
-    void set_position(glm::vec3 position) {
-        glm::vec3 difference = getPosition() - position;
-        translate(-difference);
+    void set_origin(glm::vec3 position) {
+        origin = position;
     }
 
     void set_rotation_from_quat(glm::quat quaternion) {
@@ -43,12 +47,10 @@ struct Transform {
 
         matrix = glm::mat4_cast(quaternion);
         matrix[3] = save;
-
-        std::cout << glm::to_string(matrix) << std::endl;
     }
 
-    glm::vec3 getPosition() const {
-        return matrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    glm::vec3 get_origin() const {
+        return origin;
     }
 
     glm::vec3 forward() const {

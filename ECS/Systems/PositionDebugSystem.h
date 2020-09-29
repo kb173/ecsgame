@@ -17,9 +17,9 @@ public:
     void tick(World *pWorld, float deltaTime) override {
         pWorld->each<Transform>([&](Entity *ent, ComponentHandle<Transform> transform) {
             std::cout << ent->getEntityId() << ": "
-                      << transform->getPosition().x << ", "
-                      << transform->getPosition().y << ", "
-                      << transform->getPosition().z
+                      << transform->get_origin().x << ", "
+                      << transform->get_origin().y << ", "
+                      << transform->get_origin().z
                       << std::endl;
         });
     }

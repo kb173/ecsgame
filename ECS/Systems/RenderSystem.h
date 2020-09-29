@@ -34,9 +34,14 @@ public:
                 shader.setVec3("lightDirection", light->direction);
             });
 
+            glm::vec3 cameraPos = cameraTransform->get_origin();
+
+            glm::mat4 view = cameraTransform->matrix;
+            view[3] = glm::vec4(cameraPos, 1.0);
+
             shader.setMat4("projection", camera->projection);
-            shader.setMat4("view", glm::inverse(cameraTransform->matrix));
-            shader.setVec3("cameraPosition", cameraTransform->getPosition());
+            shader.setMat4("view", glm::inverse(view));
+            shader.setVec3("cameraPosition", cameraTransform->get_origin());
 
             std::vector<RenderObject> renderObjects;
             std::vector<RenderObject> transparentRenderObjects;
@@ -44,8 +49,6 @@ public:
             /*pWorld->each<Mesh, Transform>([&](Entity *ent, ComponentHandle<Mesh> mesh, ComponentHandle<Transform> transform) {
                 renderObjects.emplace_back(RenderObject(transform->matrix, 0, mesh.get(), 0));
             });*/
-
-            glm::vec3 cameraPos = cameraTransform->getPosition();
 
             /*// TODO: Is it possible to do get ObjMeshes in the Mesh loop above implicitly via polymorphism?
              * // TODO: Commented out because of double rendering - we only want to get objects that explicitly DON'T have a texture here!
@@ -61,7 +64,7 @@ public:
             // ObjMesh with textures
             pWorld->each<ObjMesh, Transform, Texture>([&](Entity *ent, ComponentHandle<ObjMesh> mesh, ComponentHandle<Transform> transform, ComponentHandle<Texture> texture) {
                 // Add the object to the renderObjects to draw if the distance is within the min and max distance of the mesh
-                float distance = glm::distance(cameraPos, transform->getPosition());
+                float distance = glm::distance(cameraPos, transform->get_origin());
 
                 if (distance > mesh->minDistance && distance < mesh->maxDistance) {
                     // Get optional components
@@ -73,16 +76,16 @@ public:
 
                     // Put it into the list of transparent render objects if the texture wants to be rendered transparently
                     if (textureComponent.isValid() && textureComponent->render_transparent) {
-                        transparentRenderObjects.emplace_back(RenderObject(transform->matrix, textureID, mesh.get(), distance, material));
+                        transparentRenderObjects.emplace_back(RenderObject(transform->matrix, transform->get_origin(), textureID, mesh.get(), distance, material));
                     } else {
-                        renderObjects.emplace_back(RenderObject(transform->matrix, textureID, mesh.get(), distance, material));
+                        renderObjects.emplace_back(RenderObject(transform->matrix, transform->get_origin(), textureID, mesh.get(), distance, material));
                     }
                 }
             });
 
             // LODObjMesh with Texture
             pWorld->each<LODObjMesh, Transform>([&](Entity *ent, ComponentHandle<LODObjMesh> lodMesh, ComponentHandle<Transform> transform) {
-                float distance = glm::distance(cameraPos, transform->getPosition());
+                float distance = glm::distance(cameraPos, transform->get_origin());
 
                 for (const auto &mesh : lodMesh->meshes) {
                     if (distance > mesh.minDistance && distance < mesh.maxDistance) {
@@ -95,9 +98,9 @@ public:
 
                         // Put it into the list of transparent render objects if the texture wants to be rendered transparently
                         if (textureComponent.isValid() && textureComponent->render_transparent) {
-                            transparentRenderObjects.emplace_back(RenderObject(transform->matrix, textureID, mesh, distance, material));
+                            transparentRenderObjects.emplace_back(RenderObject(transform->matrix, transform->get_origin(), textureID, mesh, distance, material));
                         } else {
-                            renderObjects.emplace_back(RenderObject(transform->matrix, textureID, mesh, distance, material));
+                            renderObjects.emplace_back(RenderObject(transform->matrix, transform->get_origin(), textureID, mesh, distance, material));
                         }
                     }
                 }
@@ -118,15 +121,18 @@ public:
     }
 
     struct RenderObject {
-        RenderObject(const glm::mat4 &matrix, unsigned int textureId, const Mesh &mesh, float distance, const Material &material)
+        RenderObject(const glm::mat4 &matrix, const glm::vec3 &origin, unsigned int textureId, const Mesh &mesh, float distance, const Material &material)
                                                                                         : matrix(matrix),
+                                                                                          origin(origin),
                                                                                           texture_id(textureId),
                                                                                           mesh(mesh),
                                                                                           distance(distance),
                                                                                           material(material) {}
 
         void render(Shader shader) const {
-            shader.setMat4("model", matrix);
+            glm::mat4 model_matrix = matrix;
+            model_matrix[3] = glm::vec4(origin, 1.0);
+            shader.setMat4("model", model_matrix);
 
             // 0 can't be a valid texture name, so we use it for meshes without textures here
             if (texture_id != 0) {
@@ -140,6 +146,7 @@ public:
         }
 
         glm::mat4 matrix;
+        glm::vec3 origin;
         unsigned int texture_id;
         Mesh mesh;
         float distance;
