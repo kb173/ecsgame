@@ -93,13 +93,23 @@ int main() {
     player->assign<Camera>(70.0f, 1280, 720, 0.1f, 100.0f);
     player->assign<PathMove>(10.0, PathMove::Path(std::vector<glm::vec3>{
             glm::vec3(0.0, 2.0, 0.0),
-            glm::vec3(0.0, 2.0, 1.0),
-            glm::vec3(2.0, 2.0, 2.0),
-            glm::vec3(1.0, 3.0, 3.0),
-            glm::vec3(-2.0, 2.0, 4.0),
-            glm::vec3(2.0, 2.0, 4.0),
-            glm::vec3(0.0, 2.0, 10.0)
-        }));
+            glm::vec3(0.0, 2.0, -1.0),
+            glm::vec3(2.0, 2.0, -2.0),
+            glm::vec3(1.0, 3.0, -3.0),
+            glm::vec3(-2.0, 2.0, -4.0),
+            glm::vec3(2.0, 2.0, -4.0),
+            glm::vec3(0.0, 2.0, -10.0)
+        }),
+        PathMove::Views(std::vector<glm::quat>{
+            glm::quat(0.0, 0.0, 0.0, 0.0),
+            glm::angleAxis(glm::radians(10.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(30.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(40.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(50.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(70.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(80.f), glm::vec3(0.f, 1.f, 0.f))
+        })
+    );
     player->get<Transform>()->translate(glm::vec3(0.0f, 1.0f, 2.0f));
 
     Entity *monkey = world->create();

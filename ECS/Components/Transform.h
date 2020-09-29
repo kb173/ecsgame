@@ -9,6 +9,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "glm/gtx/string_cast.hpp"
+
 struct Transform {
     Transform() = default;
 
@@ -33,6 +35,16 @@ struct Transform {
     void set_position(glm::vec3 position) {
         glm::vec3 difference = getPosition() - position;
         translate(-difference);
+    }
+
+    void set_rotation_from_quat(glm::quat quaternion) {
+        // Remember translation
+        glm::vec4 save = matrix[3];
+
+        matrix = glm::mat4_cast(quaternion);
+        matrix[3] = save;
+
+        std::cout << glm::to_string(matrix) << std::endl;
     }
 
     glm::vec3 getPosition() const {

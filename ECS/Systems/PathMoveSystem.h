@@ -137,6 +137,11 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
                     // Apply
                     transform->set_position(point);
 
+                    // Rotation
+                    // https://www.3dgep.com/understanding-quaternions/#SQUAD
+                    PathMove::Views views = pathmove->views;
+                    transform->set_rotation_from_quat(views.views[pathmove->current_point_index]);
+
                     // FIXME: Debugging output
                     std::cout << point.x << ", " << point.y << ", " << point.z << std::endl;
                 });
