@@ -18,7 +18,12 @@ struct PathMove {
         std::vector<glm::quat> views;
     };
 
-    PathMove(double speed, Path path, Views views) : speed(speed), path(path), views(views) {}
+    PathMove(double speed, Path path, Views views) : speed(speed), path(path), views(views) {
+        // Calculate distances
+        for (int i = 0; i < path.points.size() - 1; i++) {
+            distances.emplace_back(glm::distance(path.points[i], path.points[i + 1]));
+        }
+    }
 
     double speed;
     float time_passed = 0.0;
@@ -28,5 +33,6 @@ struct PathMove {
 
     Path path;
     Views views;
+    std::vector<float> distances;
 };
 #endif // __PATHMOVE_H__

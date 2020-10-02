@@ -85,7 +85,8 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
                     PathMove::Path path = pathmove->path;
 
                     // Add the passed time
-                    pathmove->time_passed += deltaTime;
+                    float desired_distance = deltaTime * pathmove->speed;  // TODO
+                    pathmove->time_passed += desired_distance / pathmove->distances[pathmove->current_point_index];
 
                     // Shorthand for number of points in the path
                     int num_points = path.points.size();
@@ -171,6 +172,8 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
 
                     // Apply
                     transform->set_rotation_from_quat(result);
+
+                    std::cout << pathmove->time_passed << std::endl;
                 });
     }
 
