@@ -24,6 +24,8 @@ struct PathMove {
     float time_passed = 0.0;
     int current_point_index = 0;
 
+    int speed_addition = 0;  // 0, -1 or 1 depending on whether the speed should stay, decrease or increase
+
     Path path;
     Views views;
 };

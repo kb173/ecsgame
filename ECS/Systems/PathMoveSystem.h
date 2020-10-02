@@ -58,17 +58,17 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
         if (event.key == GLFW_KEY_W) {
             myWorld->each<PathMove>([&](Entity *ent, ComponentHandle<PathMove> pathmove) {
                 if (event.action == GLFW_PRESS) {
-                    // TODO: Velocity adder
+                    pathmove->speed_addition += 1;
                 } else if (event.action == GLFW_RELEASE) {
-                    // TODO
+                    pathmove->speed_addition -= 1;
                 }
             });
         } else if (event.key == GLFW_KEY_S) {
             myWorld->each<PathMove>([&](Entity *ent, ComponentHandle<PathMove> pathmove) {
                 if (event.action == GLFW_PRESS) {
-                    // TODO
+                    pathmove->speed_addition -= 1;
                 } else if (event.action == GLFW_RELEASE) {
-                    // TODO
+                    pathmove->speed_addition += 1;
                 }
             });
         }
@@ -77,6 +77,10 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
     void tick(World *pWorld, float deltaTime) override {
         pWorld->each<Transform, PathMove>(
                 [&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<PathMove> pathmove) {
+                    // Handle change in speed
+                    pathmove->speed += pathmove->speed_addition * deltaTime;
+                    pathmove->speed = glm::clamp(pathmove->speed, 0.0, 10.0);
+
                     // Shorthand for the path (we'll use this a lot)
                     PathMove::Path path = pathmove->path;
 
