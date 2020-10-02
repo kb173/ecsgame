@@ -112,7 +112,6 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
                         p3 = p2 + interp_direction * 2.0f;
                     } else {
                         // We're fine - use the point after the target for p3
-                        p2 = path.points[pathmove->current_point_index + 1];
                         p3 = path.points[pathmove->current_point_index + 2];
                     }
 
@@ -140,7 +139,34 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
                     // Rotation
                     // https://www.3dgep.com/understanding-quaternions/#SQUAD
                     PathMove::Views views = pathmove->views;
-                    transform->set_rotation_from_quat(views.views[pathmove->current_point_index]);
+
+                    // Similar procedure as with position to get the relevant values
+                    glm::quat q0;
+                    glm::quat q1 = views.views[pathmove->current_point_index];
+                    glm::quat q2 = views.views[pathmove->current_point_index + 1];
+                    glm::quat q3;
+
+                    if (pathmove->current_point_index == num_points - 2) {
+                        // Interpolate what q3 would be if the change from q1 to q2 continues
+                        q3 = glm::fastMix(q1, q2, 2.0f);
+                    } else {
+                        // We're fine - use the point after the target for p3
+                        q3 = views.views[pathmove->current_point_index + 2];
+                    }
+
+                    if (pathmove->current_point_index == 0) {
+                        // Interpolate what q0 would be if the same change happened from q0 to q1 as from q1 to q2
+                        q0 = glm::fastMix(q1, q2, -1.0f);
+                    } else {
+                        // We're fine - use the point before the current point
+                        q0 = views.views[pathmove->current_point_index - 1];
+                    }
+
+                    // Interpolate
+                    glm::quat result = glm::squad(q1, q2, glm::intermediate(q0, q1, q2), glm::intermediate(q1, q2, q3), pathmove->time_passed);
+
+                    // Apply
+                    transform->set_rotation_from_quat(result);
                 });
     }
 

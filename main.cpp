@@ -101,12 +101,12 @@ int main() {
             glm::vec3(0.0, 2.0, -10.0)
         }),
         PathMove::Views(std::vector<glm::quat>{
-            glm::quat(0.0, 0.0, 0.0, 0.0),
-            glm::angleAxis(glm::radians(-10.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f)),
             glm::angleAxis(glm::radians(10.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(20.f), glm::vec3(0.f, 1.f, 0.f)),
             glm::angleAxis(glm::radians(40.f), glm::vec3(0.f, 1.f, 0.f)),
             glm::angleAxis(glm::radians(90.f), glm::vec3(0.f, 1.f, 0.f)),
-            glm::angleAxis(glm::radians(95.f), glm::vec3(0.f, 1.f, 0.f)),
+            glm::angleAxis(glm::radians(120.f), glm::vec3(0.f, 1.f, 0.f)),
             glm::angleAxis(glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f))
         })
     );
