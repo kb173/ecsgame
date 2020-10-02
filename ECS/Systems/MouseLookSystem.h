@@ -41,19 +41,15 @@ public:
 
     void tick(World *pWorld, float deltaTime) override {
         pWorld->each<Transform, MouseLook, Camera>([&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<MouseLook> mouse, ComponentHandle<Camera> camera) {
-            if(mouse->pitch > 50.0f)
-                mouse->pitch =  50.0f;
-            if(mouse->pitch < -50.0f)
-                mouse->pitch = -50.0f;
+            if(mouse->pitch > 80.0f)
+                mouse->pitch =  80.0f;
+            if(mouse->pitch < -80.0f)
+                mouse->pitch = -80.0f;
 
-            glm::mat4x4 newTransform = glm::mat4x4(1.0);
+            glm::quat rotation = glm::angleAxis(glm::radians((float)mouse->yaw), glm::vec3(0.f, 1.f, 0.f));
+            rotation *= glm::angleAxis(glm::radians((float)mouse->pitch), glm::vec3(1.f, 0.f, 0.f));
 
-            newTransform = glm::rotate(newTransform, glm::radians((float)mouse->pitch), transform->right());
-            newTransform = glm::rotate(newTransform, glm::radians((float)mouse->yaw), glm::vec3(0.0, 1.0, 0.0));
-
-            newTransform[3] = transform->matrix[3];
-
-            transform->matrix = newTransform;
+            transform->set_rotation_from_quat(rotation);
         });
     }
 
