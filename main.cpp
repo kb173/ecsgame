@@ -88,10 +88,10 @@ int main() {
 
     Entity *player = world->create();
     player->assign<Transform>();
-    //player->assign<Movement>(glm::vec3(2.f, 2.f, 2.f));
-    //player->assign<MouseLook>(0.1);
+    player->assign<Movement>(glm::vec3(2.f, 2.f, 2.f));
+    player->assign<MouseLook>(0.1);
     player->assign<Camera>(70.0f, 1280, 720, 0.1f, 100.0f);
-    player->assign<PathMove>(10.0, PathMove::Path(std::vector<glm::vec3>{
+    /*player->assign<PathMove>(10.0, PathMove::Path(std::vector<glm::vec3>{
             glm::vec3(0.0, 2.0, 0.0),
             glm::vec3(-2.0, 2.0, -1.0),
             glm::vec3(-1.0, 2.0, -2.0),
@@ -109,7 +109,7 @@ int main() {
             glm::angleAxis(glm::radians(120.f), glm::vec3(0.f, 1.f, 0.f)),
             glm::angleAxis(glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f))
         })
-    );
+    );*/
 
     Entity *monkey = world->create();
     monkey->assign<Transform>();

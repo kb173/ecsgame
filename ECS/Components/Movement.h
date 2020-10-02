@@ -10,7 +10,7 @@ struct Movement {
 
     glm::vec3 speed;
 
-    glm::ivec3 moving;
+    glm::ivec3 moving = glm::ivec3(0, 0, 0);
 
     glm::vec3 velocity;
 };

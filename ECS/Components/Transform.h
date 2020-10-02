@@ -41,6 +41,10 @@ struct Transform {
         origin = position;
     }
 
+    void add_to_origin(glm::vec3 addition) {
+        origin += addition;
+    }
+
     void set_rotation_from_quat(glm::quat quaternion) {
         // Remember translation
         glm::vec4 save = matrix[3];
