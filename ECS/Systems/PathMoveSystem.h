@@ -77,6 +77,8 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
     void tick(World *pWorld, float deltaTime) override {
         pWorld->each<Transform, PathMove>(
                 [&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<PathMove> pathmove) {
+                    if (!pathmove->is_active) return;
+                    
                     // Handle change in speed
                     pathmove->speed += pathmove->speed_addition * deltaTime;
                     pathmove->speed = glm::clamp(pathmove->speed, 0.0, 10.0);
@@ -131,7 +133,7 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
                     }
 
                     // Calculate the point on the spline
-                    glm::vec3 point = catmul(0.5f,
+                    glm::vec3 point = catmul(1.f,
                             p0,
                             p1,
                             p2,

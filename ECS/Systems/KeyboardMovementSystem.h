@@ -63,6 +63,8 @@ class KeyboardMovementSystem : public EntitySystem, public EventSubscriber<Input
     void tick(World *pWorld, float deltaTime) override {
         pWorld->each<Transform, Movement>(
                 [&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<Movement> movement) {
+                    if (!movement->is_active) return;
+
                     transform->add_to_origin(transform->matrix * glm::vec4((glm::vec3(movement->moving) * movement->speed * deltaTime), 0.0));
                 });
     }

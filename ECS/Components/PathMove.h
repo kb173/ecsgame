@@ -25,6 +25,7 @@ struct PathMove {
         }
     }
 
+    bool is_active;
     double speed;
     float time_passed = 0.0;
     int current_point_index = 0;

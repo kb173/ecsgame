@@ -13,6 +13,8 @@ struct Movement {
     glm::ivec3 moving = glm::ivec3(0, 0, 0);
 
     glm::vec3 velocity;
+
+    bool is_active;
 };
 
 #endif //ECSGAME_MOVEMENT_H

@@ -11,8 +11,9 @@ struct MouseLook {
     float sensitivity;
 
     double yaw = 0.0;
-
     double pitch = 0.0;
+
+    bool is_active;
 };
 
 #endif //ECSGAME_MOUSELOOK_H

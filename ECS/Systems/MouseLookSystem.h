@@ -41,6 +41,8 @@ public:
 
     void tick(World *pWorld, float deltaTime) override {
         pWorld->each<Transform, MouseLook, Camera>([&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<MouseLook> mouse, ComponentHandle<Camera> camera) {
+            if (!mouse->is_active) return;
+
             if(mouse->pitch > 80.0f)
                 mouse->pitch =  80.0f;
             if(mouse->pitch < -80.0f)
