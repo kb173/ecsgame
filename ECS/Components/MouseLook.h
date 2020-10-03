@@ -13,6 +13,8 @@ struct MouseLook {
     double yaw = 0.0;
     double pitch = 0.0;
 
+    glm::quat rotation;
+
     bool is_active;
 };
 

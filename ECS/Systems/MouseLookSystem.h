@@ -48,10 +48,10 @@ public:
             if(mouse->pitch < -80.0f)
                 mouse->pitch = -80.0f;
 
-            glm::quat rotation = glm::angleAxis(glm::radians((float)mouse->yaw), glm::vec3(0.f, 1.f, 0.f));
-            rotation *= glm::angleAxis(glm::radians((float)mouse->pitch), glm::vec3(1.f, 0.f, 0.f));
+            mouse->rotation = glm::angleAxis(glm::radians((float)mouse->yaw), glm::vec3(0.f, 1.f, 0.f));
+            mouse->rotation *= glm::angleAxis(glm::radians((float)mouse->pitch), glm::vec3(1.f, 0.f, 0.f));
 
-            transform->set_rotation_from_quat(rotation);
+            transform->set_rotation_from_quat(mouse->rotation);
         });
     }
 

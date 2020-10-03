@@ -7,23 +7,33 @@
 
 struct PathMove {
     struct Path {
-        Path(std::vector<glm::vec3> points) : points(points) {}
+        Path(std::vector<glm::vec3> points) : points(points) {
+            // Calculate distances
+            for (int i = 0; i < points.size() - 1; i++) {
+                distances.emplace_back(glm::distance(points[i], points[i + 1]));
+            }
+        }
+
+        void add_point(glm::vec3 new_point) {
+            distances.emplace_back(glm::distance(points.back(), new_point));
+            points.emplace_back(new_point);
+        }
 
         std::vector<glm::vec3> points;
+        std::vector<float> distances;
     };
 
     struct Views {
         Views(std::vector<glm::quat> views) : views(views) {}
 
+        void add_view(glm::quat new_quat) {
+            views.emplace_back(new_quat);
+        }
+
         std::vector<glm::quat> views;
     };
 
-    PathMove(double speed, Path path, Views views) : speed(speed), path(path), views(views) {
-        // Calculate distances
-        for (int i = 0; i < path.points.size() - 1; i++) {
-            distances.emplace_back(glm::distance(path.points[i], path.points[i + 1]));
-        }
-    }
+    PathMove(double speed, Path path, Views views) : speed(speed), path(path), views(views) {}
 
     bool is_active;
     double speed;
@@ -34,6 +44,5 @@ struct PathMove {
 
     Path path;
     Views views;
-    std::vector<float> distances;
 };
 #endif // __PATHMOVE_H__

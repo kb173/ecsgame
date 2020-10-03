@@ -14,7 +14,7 @@
 
 using namespace ECS;
 
-class PathMovementSwitchSystem : public EntitySystem, public EventSubscriber<InputEvent> {
+class InteractivePathSystem : public EntitySystem, public EventSubscriber<InputEvent> {
     void configure(World *pWorld) override {
         myWorld = pWorld;
 
@@ -35,6 +35,14 @@ class PathMovementSwitchSystem : public EntitySystem, public EventSubscriber<Inp
                         movement->is_active = false;
                         mouselook->is_active = false;
                     }
+                }
+            });
+        } else if (event.key == GLFW_KEY_R) {
+            myWorld->each<PathMove, Movement, MouseLook, Transform>([&](Entity *ent, ComponentHandle<PathMove> pathmove, ComponentHandle<Movement> movement, ComponentHandle<MouseLook> mouselook, ComponentHandle<Transform> transform) {
+                if (event.action == GLFW_PRESS) {
+                    // Add this point to the path
+                    pathmove->path.add_point(transform->origin);
+                    pathmove->views.add_view(mouselook->rotation);
                 }
             });
         }

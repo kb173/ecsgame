@@ -78,7 +78,7 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
         pWorld->each<Transform, PathMove>(
                 [&](Entity *ent, ComponentHandle<Transform> transform, ComponentHandle<PathMove> pathmove) {
                     if (!pathmove->is_active) return;
-                    
+
                     // Handle change in speed
                     pathmove->speed += pathmove->speed_addition * deltaTime;
                     pathmove->speed = glm::clamp(pathmove->speed, 0.0, 10.0);
@@ -88,7 +88,7 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
 
                     // Add the passed time
                     float desired_distance = deltaTime * pathmove->speed;  // TODO
-                    pathmove->time_passed += desired_distance / pathmove->distances[pathmove->current_point_index];
+                    pathmove->time_passed += desired_distance / path.distances[pathmove->current_point_index];
 
                     // Shorthand for number of points in the path
                     int num_points = path.points.size();

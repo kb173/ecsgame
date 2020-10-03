@@ -19,7 +19,7 @@
 #include "ECS/Systems/SineAnimationSystem.h"
 #include "ECS/Components/DirectionalLight.h"
 #include "ECS/Components/PathMove.h"
-#include "ECS/Systems/PathMovementSwitchSystem.h"
+#include "ECS/Systems/InteractivePathSystem.h"
 
 using namespace ECS;
 
@@ -83,7 +83,7 @@ int main() {
     world->registerSystem(new MouseLookSystem(1280, 720));
     world->registerSystem(new PathMoveSystem());
     world->registerSystem(new SineAnimationSystem());
-    world->registerSystem(new PathMovementSwitchSystem());
+    world->registerSystem(new InteractivePathSystem());
 
     RenderSystem* renderSystem = new RenderSystem();
     world->registerSystem(renderSystem);
