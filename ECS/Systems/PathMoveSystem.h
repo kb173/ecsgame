@@ -174,8 +174,6 @@ class PathMoveSystem : public EntitySystem, public EventSubscriber<InputEvent> {
 
                     // Apply
                     transform->set_rotation_from_quat(result);
-
-                    std::cout << pathmove->time_passed << std::endl;
                 });
     }
 

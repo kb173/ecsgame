@@ -90,16 +90,16 @@ int main() {
 
     Entity *player = world->create();
     player->assign<Transform>();
-    player->assign<Movement>(glm::vec3(2.f, 2.f, 2.f));
+    player->assign<Movement>(glm::vec3(5.f, 5.f, 5.f));
     player->assign<MouseLook>(0.1);
-    player->assign<Camera>(70.0f, 1280, 720, 0.1f, 100.0f);
+    player->assign<Camera>(70.0f, 900, 600, 0.1f, 100.0f);
     player->assign<PathMove>(3.0, PathMove::Path(std::vector<glm::vec3>{
             glm::vec3(0.0, 2.0, 0.0),
-            glm::vec3(0.0, 2.0, -1.0),
-            glm::vec3(0.0, 2.0, -2.0),
-            glm::vec3(4.0, 3.0, -3.0),
-            glm::vec3(2.0, 2.0, -4.0),
-            glm::vec3(1.0, 2.0, -4.0),
+            glm::vec3(0.0, 2.5, -1.0),
+            glm::vec3(0.0, 2.5, -2.0),
+            glm::vec3(3.0, 3.0, -3.0),
+            glm::vec3(4.0, 2.0, -4.0),
+            glm::vec3(3.0, 2.0, -5.0),
             glm::vec3(0.0, 2.0, -10.0)
         }),
         PathMove::Views(std::vector<glm::quat>{
@@ -115,12 +115,21 @@ int main() {
 
     Entity *monkey = world->create();
     monkey->assign<Transform>();
-    monkey->assign<LODObjMesh>(std::vector{ObjMesh("Resources/Monkey.obj",ObjMesh::Settings(0.0, 8.0, 0.4, 0.6)),
+    monkey->assign<LODObjMesh>(std::vector<ObjMesh>{ObjMesh("Resources/Monkey.obj",ObjMesh::Settings(0.0, 8.0, 0.4, 0.6)),
                                            ObjMesh("Resources/MonkeySimple.obj", ObjMesh::Settings(8.0, 100.0, 0.4, 0.6))});
     monkey->assign<Texture>("Resources/Marble.jpg", Texture::Settings(true, false));
     monkey->assign<SineAnimation>(glm::vec3(0.0, 0.3, 0.0), 0.5);
     monkey->assign<Material>(0.6, 0.6);
     monkey->get<Transform>()->set_origin(glm::vec3(0.0f, 2.0f, -6.0f));
+    
+    Entity *monkey2 = world->create();
+    monkey2->assign<Transform>();
+    monkey2->assign<LODObjMesh>(std::vector<ObjMesh>{ObjMesh("Resources/Monkey.obj",ObjMesh::Settings(0.0, 8.0, 0.4, 0.6)),
+                                           ObjMesh("Resources/MonkeySimple.obj", ObjMesh::Settings(8.0, 100.0, 0.4, 0.6))});
+    monkey2->assign<Texture>("Resources/Marble.jpg", Texture::Settings(true, false));
+    monkey2->assign<SineAnimation>(glm::vec3(0.0, 0.3, 0.0), 0.5);
+    monkey2->assign<Material>(0.6, 0.6);
+    monkey2->get<Transform>()->set_origin(glm::vec3(-5.0f, 2.0f, -20.0f));
 
     Entity *wall1 = world->create();
     wall1->assign<Transform>();
