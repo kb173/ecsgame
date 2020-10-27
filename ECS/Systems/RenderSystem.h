@@ -211,9 +211,10 @@ public:
             for (const RenderObject &obj : renderObjects) {
                 obj.render(shadowShader);
             }
-            for (const RenderObject &obj : transparentRenderObjects) {
+            // Don't render transparent objects -- we just assume they don't cast any shadow
+            /* for (const RenderObject &obj : transparentRenderObjects) {
                 obj.render(shadowShader);
-            }
+            } */
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
             // reset viewport
@@ -261,8 +262,8 @@ public:
     int screen_width = 1280;
     int screen_height = 720;
 
-    int shadow_width = 1024;
-    int shadow_height = 1024;
+    int shadow_width = 2048;
+    int shadow_height = 2048;
 
     unsigned int depthMap;
     unsigned int depthMapFBO;
