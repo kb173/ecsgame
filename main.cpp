@@ -112,6 +112,7 @@ int main() {
             glm::angleAxis(glm::radians(180.f), glm::vec3(0.f, 1.f, 0.f))
         })
     );
+    player->get<Transform>()->set_origin(glm::vec3(0.0, 3.0, 4.0));
 
     Entity *monkey = world->create();
     monkey->assign<Transform>();
@@ -172,6 +173,8 @@ int main() {
     sun->assign<DirectionalLight>(glm::normalize(glm::vec3(1.0, 1.0, 1.0)));
 
     Shader defaultShader("Shaders/default-vertex.vs", "Shaders/default-fragment.fs");
+    Shader shadowShader("Shaders/shadow-vertex.vs", "Shaders/shadow-fragment.fs");
+    Shader debugShader("Shaders/debug-vertex.vs", "Shaders/debug-fragment.fs");
 
     double timeInLastFrame = glfwGetTime();
     double elapsed_time = 0.0;
@@ -184,7 +187,7 @@ int main() {
         elapsed_time += delta;
 
         world->tick(delta);
-        renderSystem->render(world, defaultShader);
+        renderSystem->render(world, defaultShader, shadowShader, debugShader);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

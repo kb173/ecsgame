@@ -15,7 +15,7 @@ struct MouseLook {
 
     glm::quat rotation;
 
-    bool is_active;
+    bool is_active = true;
 };
 
 #endif //ECSGAME_MOUSELOOK_H

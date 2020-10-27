@@ -35,7 +35,7 @@ struct PathMove {
 
     PathMove(double speed, Path path, Views views) : speed(speed), path(path), views(views) {}
 
-    bool is_active;
+    bool is_active = false;
     double speed;
     float time_passed = 0.0;
     int current_point_index = 0;

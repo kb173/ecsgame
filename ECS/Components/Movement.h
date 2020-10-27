@@ -14,7 +14,7 @@ struct Movement {
 
     glm::vec3 velocity;
 
-    bool is_active;
+    bool is_active = true;
 };
 
 #endif //ECSGAME_MOVEMENT_H
