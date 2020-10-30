@@ -18,9 +18,7 @@
 
 using namespace ECS;
 
-// For debugging:
-// renderQuad() renders a 1x1 XY quad in NDC
-// -----------------------------------------
+// For Debugging
 unsigned int quadVAO = 0;
 unsigned int quadVBO;
 void renderQuad()
@@ -162,7 +160,8 @@ public:
     RenderSystem() {
         // Configure depth map
         glGenFramebuffers(1, &depthMapFBO);
-        // create depth texture
+
+        // Create depth texture
         glGenTextures(1, &depthMap);
         glBindTexture(GL_TEXTURE_2D, depthMap);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadow_width, shadow_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -170,7 +169,8 @@ public:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        // attach depth texture as FBO's depth buffer
+        
+        // Attach depth texture as FBO's depth buffer
         glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
         glDrawBuffer(GL_NONE);
@@ -181,10 +181,7 @@ public:
 
     void render(World *pWorld, Shader normalShader, Shader shadowShader, Shader debugShader) {
         pWorld->each<Camera, Transform>([&](Entity *ent, ComponentHandle<Camera> camera, ComponentHandle<Transform> cameraTransform) {
-            // Common
-            glClearColor(0.6f, 0.9f, 0.9f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+            // Get render objects
             std::vector<std::vector<RenderObject>> allRenderObjects = getRenderObjects(pWorld, cameraTransform->get_origin());
             std::vector<RenderObject> renderObjects = allRenderObjects[0];
             std::vector<RenderObject> transparentRenderObjects = allRenderObjects[1];
@@ -208,6 +205,7 @@ public:
             
             glViewport(0, 0, shadow_width, shadow_height);
             glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             for (const RenderObject &obj : renderObjects) {
                 obj.render(shadowShader);
             }
@@ -217,12 +215,12 @@ public:
             } */
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-            // reset viewport
+            // Render Normal
             glViewport(0, 0, screen_width, screen_height);
+            
+            glClearColor(0.6f, 0.9f, 0.9f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-            // Render normal
             normalShader.use();
 
             // Lighting
@@ -255,7 +253,7 @@ public:
             debugShader.setFloat("far_plane", far_plane);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, depthMap);
-            //renderQuad(); // TODO: Add actual code switch instead of commenting
+            renderQuad();
         });
     }
 

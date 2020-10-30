@@ -169,6 +169,21 @@ int main() {
     ground->assign<Material>(1.0, 0.0);
     ground->get<Transform>()->set_origin(glm::vec3(0.0f, 0.0f, 0.0f));
 
+    Entity *bench = world->create();
+    bench->assign<Transform>();
+    bench->assign<ObjMesh>(ObjMesh("Resources/bench.obj", ObjMesh::Settings()));
+    bench->assign<Texture>("Resources/Wood.jpg", Texture::Settings(true, false));
+    bench->assign<Material>(0.8, 0.2);
+    bench->get<Transform>()->set_origin(glm::vec3(8.0f, 0.0f, 0.0f));
+    bench->get<Transform>()->rotate(-90.0, glm::vec3(0.0, 1.0, 0.0));
+
+    Entity *ring = world->create();
+    ring->assign<Transform>();
+    ring->assign<ObjMesh>(ObjMesh("Resources/ring.obj", ObjMesh::Settings()));
+    ring->assign<Texture>("Resources/Gold.jpg", Texture::Settings(true, false));
+    ring->assign<Material>(0.1, 0.9);
+    ring->get<Transform>()->set_origin(glm::vec3(-5.0f, 2.0f, 0.0f));
+
     Entity *sun = world->create();
     sun->assign<DirectionalLight>(glm::normalize(glm::vec3(1.0, 1.0, 1.0)));
 
@@ -188,6 +203,8 @@ int main() {
 
         world->tick(delta);
         renderSystem->render(world, defaultShader, shadowShader, debugShader);
+
+        ring->get<Transform>()->rotate(delta * 100.0, glm::vec3(0.0, 1.0, 0.0));
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
