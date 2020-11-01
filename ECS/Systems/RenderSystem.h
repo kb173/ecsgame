@@ -253,7 +253,7 @@ public:
             debugShader.setFloat("far_plane", far_plane);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, depthMap);
-            renderQuad();
+            // renderQuad();
         });
     }
 
